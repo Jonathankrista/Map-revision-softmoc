@@ -1,0 +1,3673 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width initial-scale=1.0 maximum-scale=1.0 user-scalable=yes" />
+  <meta charset="ISO-8859-1">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  <link href="http:/www.softmoc.com/_css/body.css" rel="stylesheet" type="text/css">
+  <link href="http://www.softmoc.com/_css/structure.css" rel="stylesheet" type="text/css">
+  <link href="http://www.softmoc.com/_css/links.css" rel="stylesheet" type="text/css">
+  <link href="http://www.softmoc.com/_css/images.css" rel="stylesheet" type="text/css">
+  <link href="http://www.softmoc.com/_css/responsive.css" rel="stylesheet" type="text/css">
+  <link href="http://www.softmoc.com/_css/forms.css" rel="stylesheet" type="text/css">
+  <link href="http://softmoc.com/_css/text.css" rel="stylesheet" type="text/css">
+  <link href="_css/webfonts.css" rel="stylesheet">
+  <link href="_css/font-awesome.css" rel="stylesheet">
+  <link href="http://www.softmoc.com/_css/new_menu.css" rel="stylesheet" type="text/css">
+  <link href="http://www.softmoc.com/_css/mmenu.softmoc.css" type="text/css" rel="stylesheet" />
+  <link href="http://www.softmoc.com/_css/footer2.css" rel="stylesheet" type="text/css">
+  <link href="http://www.softmoc.com/_css/magnific-popup.css" rel="stylesheet">
+  <link href="http://www.softmoc.com/_css/jcs-pop.css" rel="stylesheet">
+
+  <script type="text/javascript" src="http://www.softmoc.com/_js/new-text.js"></script>
+  <script type="text/javascript" src="http://www.softmoc.com/_js/jquery-1.11.2.min.js"></script>
+  <script type="text/javascript" src="http://www.softmoc.com/_js/jquery.magnific-popup.min.js" charset="utf-8"></script>
+  <script type="text/javascript" src="http://www.softmoc.com/_js/jquery.mmenu.min.softmoc.js"></script>
+
+  <script type="text/javascript" src="http://www.softmoc.com/_js/mmenu-search.js"></script>
+
+  <script type="text/javascript" src="/sys/Main.js"></script>
+  <script type="text/javascript" src="http://www.softmoc.com/_js/jcs-pop.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-6457300-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+  <meta name="description" content="Search for your closest SoftMoc Store location.  Over 95 locations across Canada to serve you! Free Shipping, Free Exchanges & Easy Returns. Over 110 stores across Canada.">
+  <title>SoftMoc Store Locations | SoftMoc.com</title>
+  <link href="_css/locations.css" rel="stylesheet" type="text/css">
+  <script src="http://www.softmoc.com/_spry/SpryTabbedPanels.js" type="text/javascript"></script>
+  <script src="https://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+</head>
+<script LANGUAGE="JavaScript">
+function FillMap()
+{
+	var locations = new Array();
+	var State="";
+	var City="";
+	var StartPos=0;
+	if (this.document.SForm1.SearchState.selectedIndex > 0)
+	{
+		State="" +document.SForm1.SearchState.options[document.SForm1.SearchState.selectedIndex].value;
+		City="" +document.SForm1.SearchCity.options[document.SForm1.SearchCity.selectedIndex].value;
+	}
+	for (var i=0; i < X_Num; i++)
+	{
+		if (((X_State[i]==State)||(State==""))  &&  ((X_City[i]==City)||(City=="")))
+			break;
+		StartPos++;
+	}
+
+	var Top_Lat= 0;
+	var Bottom_Lat=0;
+	var Left_Lng= 0;
+	var Right_Lng= 0;
+	for (var j=StartPos; j < X_Num; j++)
+	{
+		if (((X_State[j]!=State)&&(State!=""))  ||  ((X_City[j]!=City)&&(City!="")))
+			break;
+		locations[j-StartPos]=new Array();
+		locations[j-StartPos][0]=FormatResult_Map(j);//"SoftMoc<br> <b>"+X_Name[j]+"</b>";
+		locations[j-StartPos][1]=X_Lat[j];
+		locations[j-StartPos][2]=X_Lng[j];
+		locations[j-StartPos][3]=X_ID[j];
+		if ((X_Lat[j]!="0")&&(X_Lng[j]!="0"))
+		{
+			if ((Top_Lat==0)||(parseFloat(X_Lat[j]) < Top_Lat))
+				Top_Lat = parseFloat(X_Lat[j]);
+			if ((Bottom_Lat==0)||(parseFloat(X_Lat[j]) > Bottom_Lat))
+				Bottom_Lat = parseFloat(X_Lat[j]);
+			if ((Left_Lng==0)||(parseFloat(X_Lng[j]) < Left_Lng))
+				Left_Lng = parseFloat(X_Lng[j]);
+			if ((Right_Lng==0)||(parseFloat(X_Lng[j]) > Right_Lng))
+				Right_Lng = parseFloat(X_Lng[j]);
+		}
+	}
+
+	var Center_Lat=(Bottom_Lat+Top_Lat)/2;
+	var Center_Lng=(Right_Lng+Left_Lng)/2;
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 4,
+      center: new google.maps.LatLng(Center_Lat,Center_Lng),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+	if ((State=="")&&(City==""))
+		map.setZoom(4);
+	else if ((State!="")&&(City==""))
+		map.setZoom(5);
+	else
+		map.setZoom(12);
+
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+
+    for (i = 0; i < locations.length; i++) {
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+		icon: 'http://www.softmoc.com/img/s-logo.png',
+        map: map
+      });
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+	}
+}
+
+var X_ID=new Array();
+var X_StoreURL=new Array();
+var X_Name=new Array();
+var X_Addr=new Array();
+var X_City=new Array();
+var X_State=new Array();
+var X_Zip=new Array();
+var X_Phone=new Array();
+var X_Email=new Array();
+var X_Lat=new Array();
+var X_Lng=new Array();
+
+	X_StoreURL[0]="ChinookCentre";
+	X_ID[0]="67";
+	X_Name[0]="SoftMoc Chinook Centre";
+	X_Addr[0]="6455 Macleod Trail SW, Unit 158B";
+	X_City[0]="Calgary";
+	X_State[0]="AB";
+	X_Zip[0]="T2H 0K8";
+	X_Phone[0]="(403) 255-6729";
+	X_Email[0]="softmoc67@softmoc.com";
+	X_Lat[0]="50.999647";
+	X_Lng[0]="-114.074191";
+
+	X_StoreURL[1]="MarketMall";
+	X_ID[1]="89";
+	X_Name[1]="SoftMoc Market Mall";
+	X_Addr[1]="3625 Shaganappi Trail NW, Unit# R049";
+	X_City[1]="Calgary";
+	X_State[1]="AB";
+	X_Zip[1]="T3A 0E2";
+	X_Phone[1]="(403) 288-2498";
+	X_Email[1]="softmoc89@softmoc.com";
+	X_Lat[1]="51.083863";
+	X_Lng[1]="-114.155134";
+
+	X_StoreURL[2]="ShoeRackDeerfootMeadows";
+	X_ID[2]="303";
+	X_Name[2]="SoftMoc Shoe Rack Deerfoot Meadows";
+	X_Addr[2]="33 Heritage Meadows Way S.E., Unit 610";
+	X_City[2]="Calgary";
+	X_State[2]="AB";
+	X_Zip[2]="T2H 3B8";
+	X_Phone[2]="(403) 255-4668";
+	X_Email[2]="softmoc303@softmoc.com";
+	X_Lat[2]="50.982015";
+	X_Lng[2]="-114.039112";
+
+	X_StoreURL[3]="SouthcentreMall";
+	X_ID[3]="81";
+	X_Name[3]="SoftMoc Southcentre Mall";
+	X_Addr[3]="100 Anderson Road SE - Unit 152";
+	X_City[3]="Calgary";
+	X_State[3]="AB";
+	X_Zip[3]="T2J 3V1";
+	X_Phone[3]="(403) 225-1014";
+	X_Email[3]="softmoc81@softmoc.com";
+	X_Lat[3]="50.952306";
+	X_Lng[3]="-114.065418";
+
+	X_StoreURL[4]="SunridgeMall";
+	X_ID[4]="30";
+	X_Name[4]="SoftMoc Sunridge Mall";
+	X_Addr[4]="2525-36th Street N.E., Unit 121";
+	X_City[4]="Calgary";
+	X_State[4]="AB";
+	X_Zip[4]="T1Y 5T4";
+	X_Phone[4]="(403) 293-8366";
+	X_Email[4]="softmoc30@softmoc.com";
+	X_Lat[4]="51.074438";
+	X_Lng[4]="-113.985594";
+
+	X_StoreURL[5]="TheCore";
+	X_ID[5]="70";
+	X_Name[5]="SoftMoc The Core";
+	X_Addr[5]="317 7th Avenue S.W., Unit T372";
+	X_City[5]="Calgary";
+	X_State[5]="AB";
+	X_Zip[5]="T2P 2Y9";
+	X_Phone[5]="(403) 261-7919";
+	X_Email[5]="softmoc70@softmoc.com";
+	X_Lat[5]="51.046052";
+	X_Lng[5]="-114.069728";
+
+	X_StoreURL[6]="EdmontonCityCentre";
+	X_ID[6]="86";
+	X_Name[6]="SoftMoc Edmonton City Centre";
+	X_Addr[6]="10025-102A Ave. NW, Unit 146";
+	X_City[6]="Edmonton";
+	X_State[6]="AB";
+	X_Zip[6]="T5J 2Z2";
+	X_Phone[6]="(780) 429-9690";
+	X_Email[6]="softmoc86@softmoc.com";
+	X_Lat[6]="53.54361";
+	X_Lng[6]="-113.492757";
+
+	X_StoreURL[7]="KingswayMall";
+	X_ID[7]="31";
+	X_Name[7]="SoftMoc Kingsway Mall";
+	X_Addr[7]="109th St. & Princess Elizabeth Ave.";
+	X_City[7]="Edmonton";
+	X_State[7]="AB";
+	X_Zip[7]="T5G 3A6";
+	X_Phone[7]="(780) 477-6930";
+	X_Email[7]="softmoc31@softmoc.com";
+	X_Lat[7]="53.562848";
+	X_Lng[7]="-113.506231";
+
+	X_StoreURL[8]="SouthgateCentre";
+	X_ID[8]="78";
+	X_Name[8]="SoftMoc Southgate Centre";
+	X_Addr[8]="5015-111 Street, Unit 446";
+	X_City[8]="Edmonton";
+	X_State[8]="AB";
+	X_Zip[8]="T6H 4M6";
+	X_Phone[8]="(780) 433-6350";
+	X_Email[8]="softmoc78@softmoc.com";
+	X_Lat[8]="53.485201";
+	X_Lng[8]="-113.514739";
+
+	X_StoreURL[9]="WestEdmontonMall";
+	X_ID[9]="27";
+	X_Name[9]="SoftMoc West Edmonton Mall";
+	X_Addr[9]="8882-170 Street NW, Suite R112";
+	X_City[9]="Edmonton";
+	X_State[9]="AB";
+	X_Zip[9]="T5T 4M2";
+	X_Phone[9]="(780) 489-5616";
+	X_Email[9]="softmoc27@softmoc.com";
+	X_Lat[9]="53.522701";
+	X_Lng[9]="-113.624686";
+
+	X_StoreURL[10]="ShoeRackWestEdmontonMall";
+	X_ID[10]="311";
+	X_Name[10]="SoftMoc West Edmonton Mall Rack";
+	X_Addr[10]="8882-170th Street, Unit B-110";
+	X_City[10]="Edmonton";
+	X_State[10]="AB";
+	X_Zip[10]="T5T 4M2";
+	X_Phone[10]="(780) 484-3367";
+	X_Email[10]="softmoc311@softmoc.com";
+	X_Lat[10]="53.522756";
+	X_Lng[10]="-113.618586";
+
+	X_StoreURL[11]="PrairieMallShoppingCentre";
+	X_ID[11]="48";
+	X_Name[11]="SoftMoc Prairie Mall Shopping Centre";
+	X_Addr[11]="11801-100 Street, Unit 288";
+	X_City[11]="Grande Prairie";
+	X_State[11]="AB";
+	X_Zip[11]="T8V 3Y2";
+	X_Phone[11]="(780) 882-6876";
+	X_Email[11]="softmoc48@softmoc.com";
+	X_Lat[11]="55.187689";
+	X_Lng[11]="-118.792487";
+
+	X_StoreURL[12]="ParkPlaceMall";
+	X_ID[12]="51";
+	X_Name[12]="SoftMoc Park Place Mall";
+	X_Addr[12]="501 First Avenue South, Unit D25";
+	X_City[12]="Lethbridge";
+	X_State[12]="AB";
+	X_Zip[12]="T1J 4L9";
+	X_Phone[12]="(403) 327-9164";
+	X_Email[12]="softmoc51@softmoc.com";
+	X_Lat[12]="49.698861";
+	X_Lng[12]="-112.840796";
+
+	X_StoreURL[13]="MedicineHatMall";
+	X_ID[13]="101";
+	X_Name[13]="SoftMoc Medicine Hat";
+	X_Addr[13]="3292 Dunmore Rd. SE, Unit 106B";
+	X_City[13]="Medicine Hat";
+	X_State[13]="AB";
+	X_Zip[13]="T1B 2R4";
+	X_Phone[13]="(403) 580-8019";
+	X_Email[13]="softmoc101@softmoc.com";
+	X_Lat[13]="50.003501";
+	X_Lng[13]="-110.647629";
+
+	X_StoreURL[14]="BowerPlace";
+	X_ID[14]="49";
+	X_Name[14]="SoftMoc Bower Place";
+	X_Addr[14]="4900 Molly Banister Dr, Unit 143";
+	X_City[14]="Red Deer";
+	X_State[14]="AB";
+	X_Zip[14]="T4R 1N9";
+	X_Phone[14]="(403) 347-9735";
+	X_Email[14]="softmoc49@softmoc.com";
+	X_Lat[14]="52.243369";
+	X_Lng[14]="-113.80861";
+
+	X_StoreURL[15]="CrossIronMills";
+	X_ID[15]="308";
+	X_Name[15]="SoftMoc Cross Iron Mills";
+	X_Addr[15]="261055 CrossIron Blvd., Unit 341";
+	X_City[15]="Rocky View";
+	X_State[15]="AB";
+	X_Zip[15]="T4A 0G3";
+	X_Phone[15]="(403) 274-2079";
+	X_Email[15]="softmoc308@softmoc.com";
+	X_Lat[15]="51.204943";
+	X_Lng[15]="-113.99373";
+
+	X_StoreURL[16]="Metropolis";
+	X_ID[16]="85";
+	X_Name[16]="SoftMoc at Metropolis";
+	X_Addr[16]="4700 Kingsway, Unit 1218A";
+	X_City[16]="Burnaby";
+	X_State[16]="BC";
+	X_Zip[16]="V5H 4N2";
+	X_Phone[16]="(604) 451-9499";
+	X_Email[16]="softmoc85@softmoc.com";
+	X_Lat[16]="49.226649";
+	X_Lng[16]="-123.000877";
+
+	X_StoreURL[17]="BrentwoodTownCentre";
+	X_ID[17]="61";
+	X_Name[17]="SoftMoc Brentwood Town Centre";
+	X_Addr[17]="4567 Lougheed Hwy, Unit 213";
+	X_City[17]="Burnaby";
+	X_State[17]="BC";
+	X_Zip[17]="V5C 3Z6";
+	X_Phone[17]="(604) 320-7230";
+	X_Email[17]="softmoc61@softmoc.com";
+	X_Lat[17]="49.26892";
+	X_Lng[17]="-123.001133";
+
+	X_StoreURL[18]="LougheedTownCentre";
+	X_ID[18]="59";
+	X_Name[18]="SoftMoc Lougheed Town Centre";
+	X_Addr[18]="9855 Austin Rd., Unit 210";
+	X_City[18]="Burnaby";
+	X_State[18]="BC";
+	X_Zip[18]="V3J 1N4";
+	X_Phone[18]="(604) 415-9453";
+	X_Email[18]="softmoc59@softmoc.com";
+	X_Lat[18]="49.251072";
+	X_Lng[18]="-122.895582";
+
+	X_StoreURL[19]="CoquitlamCentre";
+	X_ID[19]="36";
+	X_Name[19]="SoftMoc Coquitlam Centre";
+	X_Addr[19]="Unit 2318, 2929 Barnet Highway";
+	X_City[19]="Coquitlam";
+	X_State[19]="BC";
+	X_Zip[19]="V3B 5R5";
+	X_Phone[19]="(604) 464-7200";
+	X_Email[19]="softmoc36@softmoc.com";
+	X_Lat[19]="49.27928";
+	X_Lng[19]="-122.797562";
+
+	X_StoreURL[20]="AberdeenMall";
+	X_ID[20]="58";
+	X_Name[20]="SoftMoc Aberdeen Mall";
+	X_Addr[20]="1320 West Trans Canada Hwy, Unit 232";
+	X_City[20]="Kamloops";
+	X_State[20]="BC";
+	X_Zip[20]="V1S 1J2";
+	X_Phone[20]="(250) 314-7420";
+	X_Email[20]="softmoc58@softmoc.com";
+	X_Lat[20]="50.654795";
+	X_Lng[20]="-120.371632";
+
+	X_StoreURL[21]="OrchardPark";
+	X_ID[21]="45";
+	X_Name[21]="SoftMoc Orchard Park";
+	X_Addr[21]="2271 Harvey Ave., Unit 1345";
+	X_City[21]="Kelowna";
+	X_State[21]="BC";
+	X_Zip[21]="V1Y 6H2";
+	X_Phone[21]="(250) 712-9869";
+	X_Email[21]="softmoc45@softmoc.com";
+	X_Lat[21]="49.880252";
+	X_Lng[21]="-119.439492";
+
+	X_StoreURL[22]="WillowbrookMall";
+	X_ID[22]="37";
+	X_Name[22]="SoftMoc Willowbrook Mall";
+	X_Addr[22]="Unit 452, 19705 Fraser Highway";
+	X_City[22]="Langley";
+	X_State[22]="BC";
+	X_Zip[22]="V3A 7E9";
+	X_Phone[22]="(604) 533-8038";
+	X_Email[22]="softmoc37@softmoc.com";
+	X_Lat[22]="49.114602";
+	X_Lng[22]="-122.674987";
+
+	X_StoreURL[23]="WoodgroveCentre";
+	X_ID[23]="68";
+	X_Name[23]="SoftMoc Woodgrove Centre";
+	X_Addr[23]="6631 Island Highway North, Unit 22";
+	X_City[23]="Nanaimo";
+	X_State[23]="BC";
+	X_Zip[23]="V9T 4T7";
+	X_Phone[23]="(250) 390-6612";
+	X_Email[23]="softmoc68@softmoc.com";
+	X_Lat[23]="49.236849";
+	X_Lng[23]="-124.050051";
+
+	X_StoreURL[24]="QueensboroughLanding";
+	X_ID[24]="304";
+	X_Name[24]="SoftMoc Queensborough Landing";
+	X_Addr[24]="805 Boyd Street, Unit H130";
+	X_City[24]="New Westminster";
+	X_State[24]="BC";
+	X_Zip[24]="V3M 5X2";
+	X_Phone[24]="(604) 520-1440";
+	X_Email[24]="softmoc304@softmoc.com";
+	X_Lat[24]="49.192331";
+	X_Lng[24]="-122.948254";
+
+	X_StoreURL[25]="ShoeRackPineCentreMall";
+	X_ID[25]="307";
+	X_Name[25]="SoftMoc Shoe Rack Pine Centre Mall";
+	X_Addr[25]="156-3055 Massey Drive, Unit 35";
+	X_City[25]="Prince George";
+	X_State[25]="BC";
+	X_Zip[25]="V2N 2S9";
+	X_Phone[25]="(250) 614-2110";
+	X_Email[25]="softmoc307@softmoc.com";
+	X_Lat[25]="53.896996";
+	X_Lng[25]="-122.776624";
+
+	X_StoreURL[26]="RichmondCentre";
+	X_ID[26]="44";
+	X_Name[26]="SoftMoc Richmond Centre";
+	X_Addr[26]="6060 Minoru Blvd., Unit 1934A";
+	X_City[26]="Richmond";
+	X_State[26]="BC";
+	X_Zip[26]="V6Y 2V7";
+	X_Phone[26]="(604) 232-1159";
+	X_Email[26]="softmoc44@softmoc.com";
+	X_Lat[26]="49.167774";
+	X_Lng[26]="-123.137955";
+
+	X_StoreURL[27]="GuildfordTownCentre";
+	X_ID[27]="84";
+	X_Name[27]="SoftMoc Guildford Town Centre";
+	X_Addr[27]="10355 152 Street, Unit# 2383";
+	X_City[27]="Surrey";
+	X_State[27]="BC";
+	X_Zip[27]="V3R 7C1";
+	X_Phone[27]="(604) 584-0446";
+	X_Email[27]="softmoc84@softmoc.com";
+	X_Lat[27]="49.19031";
+	X_Lng[27]="-122.804076";
+
+	X_StoreURL[28]="ShoeRackGrandviewCorners";
+	X_ID[28]="313";
+	X_Name[28]="SoftMoc Shoe Rack Grandview Corners";
+	X_Addr[28]="2433 161A St., Unit 40";
+	X_City[28]="Surrey";
+	X_State[28]="BC";
+	X_Zip[28]="V3S 0M6";
+	X_Phone[28]="(604) 536-9728";
+	X_Email[28]="softmoc313@softmoc.com";
+	X_Lat[28]="49.04637";
+	X_Lng[28]="-122.77567";
+
+	X_StoreURL[29]="BayCentre";
+	X_ID[29]="56";
+	X_Name[29]="SoftMoc Bay Centre";
+	X_Addr[29]="1150 Douglas Street, Unit 132";
+	X_City[29]="Victoria";
+	X_State[29]="BC";
+	X_Zip[29]="V8W 3M9";
+	X_Phone[29]="(250) 380-1339";
+	X_Email[29]="softmoc56@softmoc.com";
+	X_Lat[29]="48.425178";
+	X_Lng[29]="-123.367065";
+
+	X_StoreURL[30]="HillsideCentre";
+	X_ID[30]="76";
+	X_Name[30]="SoftMoc Hillside Centre";
+	X_Addr[30]="1644 Hillside Avenue, Unit 54";
+	X_City[30]="Victoria";
+	X_State[30]="BC";
+	X_Zip[30]="V8T 2C5";
+	X_Phone[30]="(250) 370-7567";
+	X_Email[30]="softmoc76@softmoc.com";
+	X_Lat[30]="48.446456";
+	X_Lng[30]="-123.335831";
+
+	X_StoreURL[31]="MayfairMall";
+	X_ID[31]="39";
+	X_Name[31]="SoftMoc Mayfair Mall";
+	X_Addr[31]="3147 Douglas St, Unit 661";
+	X_City[31]="Victoria";
+	X_State[31]="BC";
+	X_Zip[31]="V8Z 6E3";
+	X_Phone[31]="(250) 380-7931";
+	X_Email[31]="softmoc39@softmoc.com";
+	X_Lat[31]="48.447349";
+	X_Lng[31]="-123.369718";
+
+	X_StoreURL[32]="ParkRoyalMall";
+	X_ID[32]="40";
+	X_Name[32]="SoftMoc Park Royal Mall";
+	X_Addr[32]="2002 Park Royal South, Unit 941";
+	X_City[32]="West Vancouver";
+	X_State[32]="BC";
+	X_Zip[32]="V7T 2W4";
+	X_Phone[32]="(604) 913-9193";
+	X_Email[32]="softmoc40@softmoc.com";
+	X_Lat[32]="49.326072";
+	X_Lng[32]="-123.136376";
+
+	X_StoreURL[33]="ShoppersMall";
+	X_ID[33]="77";
+	X_Name[33]="SoftMoc Shoppers Mall";
+	X_Addr[33]="1570 - 18th Street, Unit 90";
+	X_City[33]="Brandon";
+	X_State[33]="MB";
+	X_Zip[33]="R7A 5C5";
+	X_Phone[33]="(204) 727-4653";
+	X_Email[33]="softmoc77@softmoc.com";
+	X_Lat[33]="49.823986";
+	X_Lng[33]="-99.964425";
+
+	X_StoreURL[34]="KildonanPlace";
+	X_ID[34]="71";
+	X_Name[34]="SoftMoc Kildonan Place";
+	X_Addr[34]="1555 Regent Avenue West, Unit T48";
+	X_City[34]="Winnipeg";
+	X_State[34]="MB";
+	X_Zip[34]="R2C 4J2";
+	X_Phone[34]="(204) 669-7583";
+	X_Email[34]="softmoc71@softmoc.com";
+	X_Lat[34]="49.898071";
+	X_Lng[34]="-97.059791";
+
+	X_StoreURL[35]="PoloParkMall";
+	X_ID[35]="66";
+	X_Name[35]="SoftMoc Polo Park Mall";
+	X_Addr[35]="1485 Portage Avenue, Unit L106";
+	X_City[35]="Winnipeg";
+	X_State[35]="MB";
+	X_Zip[35]="R3G 0W4";
+	X_Phone[35]="(204) 788-1072";
+	X_Email[35]="softmoc66@softmoc.com";
+	X_Lat[35]="49.884577";
+	X_Lng[35]="-97.199186";
+
+	X_StoreURL[36]="StVitalCentre";
+	X_ID[36]="53";
+	X_Name[36]="SoftMoc St. Vital Centre";
+	X_Addr[36]="1225 St. Mary's Rd., Unit 103";
+	X_City[36]="Winnipeg";
+	X_State[36]="MB";
+	X_Zip[36]="R2M 5E5";
+	X_Phone[36]="(204) 256-0786";
+	X_Email[36]="softmoc53@softmoc.com";
+	X_Lat[36]="49.829216";
+	X_Lng[36]="-97.10968";
+
+	X_StoreURL[37]="ChamplainPlace";
+	X_ID[37]="43";
+	X_Name[37]="SoftMoc Champlain Place";
+	X_Addr[37]="477 Paul St. , Unit R002A";
+	X_City[37]="Dieppe";
+	X_State[37]="NB";
+	X_Zip[37]="E1A 4X5";
+	X_Phone[37]="(506) 857-9164";
+	X_Email[37]="softmoc43@softmoc.com";
+	X_Lat[37]="46.0955187";
+	X_Lng[37]="-64.7619768";
+
+	X_StoreURL[38]="RegentMall";
+	X_ID[38]="41";
+	X_Name[38]="SoftMoc Regent Mall";
+	X_Addr[38]="a1381 Regent Street, Unit I011B";
+	X_City[38]="Fredericton";
+	X_State[38]="NB";
+	X_Zip[38]="E3C 1A2";
+	X_Phone[38]="(506) 444-7072";
+	X_Email[38]="softmoc41@softmoc.com";
+	X_Lat[38]="45.935197";
+	X_Lng[38]="-66.6642";
+
+	X_StoreURL[39]="McAllisterPlace";
+	X_ID[39]="42";
+	X_Name[39]="SoftMoc McAllister Place";
+	X_Addr[39]="519 Westmorland Rd., Unit G-033";
+	X_City[39]="Saint John";
+	X_State[39]="NB";
+	X_Zip[39]="E2J 3W9";
+	X_Phone[39]="(506) 658-9164";
+	X_Email[39]="softmoc42@softmoc.com";
+	X_Lat[39]="45.306342";
+	X_Lng[39]="-66.016441";
+
+	X_StoreURL[40]="AvalonMall";
+	X_ID[40]="52";
+	X_Name[40]="SoftMoc Avalon Mall";
+	X_Addr[40]="48 Kenmount Road, Unit 135";
+	X_City[40]="St. John's";
+	X_State[40]="NL";
+	X_Zip[40]="A1B 1W3";
+	X_Phone[40]="(709) 753-7638";
+	X_Email[40]="softmoc52@softmoc.com";
+	X_Lat[40]="47.561436";
+	X_Lng[40]="-52.753478";
+
+	X_StoreURL[41]="SunnysideMall";
+	X_ID[41]="50";
+	X_Name[41]="SoftMoc Sunnyside Mall";
+	X_Addr[41]="1595 Bedford Highway, Unit 135";
+	X_City[41]="Bedford";
+	X_State[41]="NS";
+	X_Zip[41]="B4A 3Y4";
+	X_Phone[41]="(902) 832-0815";
+	X_Email[41]="softmoc50@softmoc.com";
+	X_Lat[41]="44.732924";
+	X_Lng[41]="-63.65462";
+
+	X_StoreURL[42]="MicMacMall";
+	X_ID[42]="34";
+	X_Name[42]="SoftMoc Mic Mac Mall";
+	X_Addr[42]="21 Mic Mac Blvd., Unit 227";
+	X_City[42]="Dartmouth";
+	X_State[42]="NS";
+	X_Zip[42]="B3A 4K7";
+	X_Phone[42]="(902) 461-2938";
+	X_Email[42]="softmoc34@softmoc.com";
+	X_Lat[42]="44.686084";
+	X_Lng[42]="-63.559273";
+
+	X_StoreURL[43]="HalifaxShoppingCentre";
+	X_ID[43]="35";
+	X_Name[43]="SoftMoc Halifax Shopping Centre";
+	X_Addr[43]="7001 Mumford Rd., Unit 245";
+	X_City[43]="Halifax";
+	X_State[43]="NS";
+	X_Zip[43]="B3L 4N9";
+	X_Phone[43]="(902) 453-3947";
+	X_Email[43]="softmoc35@softmoc.com";
+	X_Lat[43]="44.649241";
+	X_Lng[43]="-63.618764";
+
+	X_StoreURL[44]="MayflowerMall";
+	X_ID[44]="54";
+	X_Name[44]="SoftMoc Mayflower Mall";
+	X_Addr[44]="800 Grand Lake Road, Unit 5A";
+	X_City[44]="Sydney";
+	X_State[44]="NS";
+	X_Zip[44]="B1P 6S9";
+	X_Phone[44]="(902) 539-2185";
+	X_Email[44]="softmoc54@softmoc.com";
+	X_Lat[44]="46.148019";
+	X_Lng[44]="-60.136885";
+
+	X_StoreURL[45]="ShoeRackDurhamCentre";
+	X_ID[45]="309";
+	X_Name[45]="SoftMoc Shoe Rack Durham Centre";
+	X_Addr[45]="40 Kingston Rd. East, Unit 102B";
+	X_City[45]="Ajax";
+	X_State[45]="ON";
+	X_Zip[45]="L1Z 1E9";
+	X_Phone[45]="(905) 427-4176";
+	X_Email[45]="softmoc309@softmoc.com";
+	X_Lat[45]="43.864805";
+	X_Lng[45]="-79.023175";
+
+	X_StoreURL[46]="GeorgianMall";
+	X_ID[46]="19";
+	X_Name[46]="SoftMoc Georgian Mall";
+	X_Addr[46]="509 Bayfield Street, Unit B010C";
+	X_City[46]="Barrie";
+	X_State[46]="ON";
+	X_Zip[46]="L4M 4Z8";
+	X_Phone[46]="(705) 728-3642";
+	X_Email[46]="softmoc19@softmoc.com";
+	X_Lat[46]="44.413788";
+	X_Lng[46]="-79.708596";
+
+	X_StoreURL[47]="QuinteMall";
+	X_ID[47]="5";
+	X_Name[47]="SoftMoc Quinte Mall";
+	X_Addr[47]="390 North Front Street, Unit F2A";
+	X_City[47]="Belleville";
+	X_State[47]="ON";
+	X_Zip[47]="K8P 3E1";
+	X_Phone[47]="(613) 968-7401";
+	X_Email[47]="softmoc5@softmoc.com";
+	X_Lat[47]="44.188532";
+	X_Lng[47]="-77.402026";
+
+	X_StoreURL[48]="BramaleaCityCentre";
+	X_ID[48]="16";
+	X_Name[48]="SoftMoc Bramalea City Centre";
+	X_Addr[48]="25 Peel Centre Drive, Unit 520";
+	X_City[48]="Brampton";
+	X_State[48]="ON";
+	X_Zip[48]="L6T 3R5";
+	X_Phone[48]="(905) 799-3621";
+	X_Email[48]="softmoc16@softmoc.com";
+	X_Lat[48]="43.715977";
+	X_Lng[48]="-79.723032";
+
+	X_StoreURL[49]="ShoeRackLyndenPark";
+	X_ID[49]="310";
+	X_Name[49]="SoftMoc Shoe Rack Lynden Park";
+	X_Addr[49]="84 Lynden Road Unit #E8B";
+	X_City[49]="Brantford";
+	X_State[49]="ON";
+	X_Zip[49]="N3R 6B8";
+	X_Phone[49]="(519) 759-4040";
+	X_Email[49]="softmoc310@softmoc.com";
+	X_Lat[49]="43.171832";
+	X_Lng[49]="-80.240301";
+
+	X_StoreURL[50]="BurlingtonMall";
+	X_ID[50]="57";
+	X_Name[50]="SoftMoc Burlington Mall";
+	X_Addr[50]="777 Guelph Line Road, Unit C4C";
+	X_City[50]="Burlington";
+	X_State[50]="ON";
+	X_Zip[50]="L7R 3N2";
+	X_Phone[50]="(905) 634-5524";
+	X_Email[50]="softmoc57@softmoc.com";
+	X_Lat[50]="43.348203";
+	X_Lng[50]="-79.794519";
+
+	X_StoreURL[51]="MapleviewCentre";
+	X_ID[51]="33";
+	X_Name[51]="SoftMoc Mapleview Centre";
+	X_Addr[51]="900 Maple Ave. Unit B15";
+	X_City[51]="Burlington";
+	X_State[51]="ON";
+	X_Zip[51]="L7S 2J8";
+	X_Phone[51]="(905) 633-1225";
+	X_Email[51]="softmoc33@softmoc.com";
+	X_Lat[51]="43.326322";
+	X_Lng[51]="-79.820226";
+
+	X_StoreURL[52]="CambridgeCentre";
+	X_ID[52]="79";
+	X_Name[52]="SoftMoc Cambridge Centre";
+	X_Addr[52]="355 Hespeler Rd., Unit 240";
+	X_City[52]="Cambridge";
+	X_State[52]="ON";
+	X_Zip[52]="N1R 6B3";
+	X_Phone[52]="(519) 620-8172";
+	X_Email[52]="softmoc79@softmoc.com";
+	X_Lat[52]="43.393493";
+	X_Lng[52]="-80.320967";
+
+	X_StoreURL[53]="ShoeRackCookstownOutlets";
+	X_ID[53]="315";
+	X_Name[53]="SoftMoc Shoe Rack Cookstown Outlets";
+	X_Addr[53]="3311 Simcoe Road 89, Unit D30";
+	X_City[53]="Cookstown";
+	X_State[53]="ON";
+	X_Zip[53]="L0L 1L0";
+	X_Phone[53]="(705) 458-0065";
+	X_Email[53]="softmoc315@softmoc.com";
+	X_Lat[53]="44.197636";
+	X_Lng[53]="-79.650844";
+
+	X_StoreURL[54]="SherwayGardens";
+	X_ID[54]="22";
+	X_Name[54]="SoftMoc Sherway Gardens";
+	X_Addr[54]="25 The West Mall, Unit# 1904";
+	X_City[54]="Etobicoke";
+	X_State[54]="ON";
+	X_Zip[54]="M9C 1B8";
+	X_Phone[54]="(416) 622-4448";
+	X_Email[54]="softmoc22@softmoc.com";
+	X_Lat[54]="43.610988";
+	X_Lng[54]="-79.558313";
+
+	X_StoreURL[55]="StoneRoadMall";
+	X_ID[55]="9";
+	X_Name[55]="SoftMoc Stone Road Mall";
+	X_Addr[55]="435 Stone Road West, Unit N9";
+	X_City[55]="Guelph";
+	X_State[55]="ON";
+	X_Zip[55]="N1G 2X6";
+	X_Phone[55]="(519) 822-9062";
+	X_Email[55]="softmoc9@softmoc.com";
+	X_Lat[55]="43.518711";
+	X_Lng[55]="-80.238213";
+
+	X_StoreURL[56]="LimeRidgeMall";
+	X_ID[56]="38";
+	X_Name[56]="SoftMoc Lime Ridge Mall";
+	X_Addr[56]="999 Upper Wentworth Street, Unit 449";
+	X_City[56]="Hamilton";
+	X_State[56]="ON";
+	X_Zip[56]="L9A 4X5";
+	X_Phone[56]="(905) 388-8905";
+	X_Email[56]="softmoc38@softmoc.com";
+	X_Lat[56]="43.217993";
+	X_Lng[56]="-79.861343";
+
+	X_StoreURL[57]="CataraquiTownCentre";
+	X_ID[57]="24";
+	X_Name[57]="SoftMoc Cataraqui Town Centre";
+	X_Addr[57]="945 Gardiners Road, Unit 12";
+	X_City[57]="Kingston";
+	X_State[57]="ON";
+	X_Zip[57]="K7M 7H4";
+	X_Phone[57]="(613) 634-9610";
+	X_Email[57]="softmoc24@softmoc.com";
+	X_Lat[57]="44.256534";
+	X_Lng[57]="-76.57154";
+
+	X_StoreURL[58]="FairviewParkMall";
+	X_ID[58]="29";
+	X_Name[58]="SoftMoc Fairview Park Mall";
+	X_Addr[58]="2960 Kingsway Dr., Unit C005";
+	X_City[58]="Kitchener";
+	X_State[58]="ON";
+	X_Zip[58]="N2C 1X1";
+	X_Phone[58]="(519) 893-5722";
+	X_Email[58]="softmoc29@softmoc.com";
+	X_Lat[58]="43.424178";
+	X_Lng[58]="-80.438247";
+
+	X_StoreURL[59]="MasonvillePlace";
+	X_ID[59]="18";
+	X_Name[59]="SoftMoc Masonville Place";
+	X_Addr[59]="1680 Richmond Street North, Unit L114";
+	X_City[59]="London";
+	X_State[59]="ON";
+	X_Zip[59]="N6G 3Y9";
+	X_Phone[59]="(519) 679-8859";
+	X_Email[59]="softmoc18@softmoc.com";
+	X_Lat[59]="43.025956";
+	X_Lng[59]="-81.278488";
+
+	X_StoreURL[60]="WhiteOaksMall";
+	X_ID[60]="8";
+	X_Name[60]="SoftMoc White Oaks Mall";
+	X_Addr[60]="1105 Wellington Road South, Unit 73";
+	X_City[60]="London";
+	X_State[60]="ON";
+	X_Zip[60]="N6E 1V4";
+	X_Phone[60]="(519) 681-8486";
+	X_Email[60]="softmoc8@softmoc.com";
+	X_Lat[60]="42.931456";
+	X_Lng[60]="-81.226134";
+
+	X_StoreURL[61]="MarkvilleMall";
+	X_ID[61]="14";
+	X_Name[61]="SoftMoc Markville Mall";
+	X_Addr[61]="5000 Hwy 7 East, Unit 2165";
+	X_City[61]="Markham";
+	X_State[61]="ON";
+	X_Zip[61]="L3R 4M9";
+	X_Phone[61]="(905) 946-0476";
+	X_Email[61]="softmoc14@softmoc.com";
+	X_Lat[61]="43.869796";
+	X_Lng[61]="-79.287366";
+
+	X_StoreURL[62]="DundasWarehouseStore";
+	X_ID[62]="100";
+	X_Name[62]="SoftMoc Dundas Warehouse Sale";
+	X_Addr[62]="1310 Dundas Street East, Units 7 & 8";
+	X_City[62]="Mississauga";
+	X_State[62]="ON";
+	X_Zip[62]="L4Y 2C1";
+	X_Phone[62]="(905) 279-6847";
+	X_Email[62]="softmoc100@softmoc.com";
+	X_Lat[62]="43.60692";
+	X_Lng[62]="-79.585585";
+
+	X_StoreURL[63]="ErinMillsTownCentre";
+	X_ID[63]="32";
+	X_Name[63]="SoftMoc Erin Mills Town Centre";
+	X_Addr[63]="5100 Erins Mills Parkway, Unit B213B";
+	X_City[63]="Mississauga";
+	X_State[63]="ON";
+	X_Zip[63]="L5M 4Z5";
+	X_Phone[63]="(905) 820-8771";
+	X_Email[63]="softmoc32@softmoc.com";
+	X_Lat[63]="43.55905";
+	X_Lng[63]="-79.712371";
+
+	X_StoreURL[64]="DixieOutletMall";
+	X_ID[64]="316";
+	X_Name[64]="SoftMoc Shoe Rack Dixie Outlet Mall";
+	X_Addr[64]="1250 South Service Road, Unit 96A";
+	X_City[64]="Mississauga";
+	X_State[64]="ON";
+	X_Zip[64]="L5E 1V4";
+	X_Phone[64]="(905) 990-7100";
+	X_Email[64]="softmoc316@softmoc.com";
+	X_Lat[64]="43.593862";
+	X_Lng[64]="-79.568105";
+
+	X_StoreURL[65]="ShoeRackHeartland";
+	X_ID[65]="306";
+	X_Name[65]="SoftMoc Shoe Rack Heartland";
+	X_Addr[65]="5885 Rodeo Drive, Unit 1";
+	X_City[65]="Mississauga";
+	X_State[65]="ON";
+	X_Zip[65]="L5R 4C1";
+	X_Phone[65]="(905) 507-6363";
+	X_Email[65]="softmoc306@softmoc.com";
+	X_Lat[65]="43.610551";
+	X_Lng[65]="-79.689922";
+
+	X_StoreURL[66]="SquareOneShoppingCentre";
+	X_ID[66]="3";
+	X_Name[66]="SoftMoc Square One Shopping Centre";
+	X_Addr[66]="100 City Centre Drive, Unit 1-203";
+	X_City[66]="Mississauga";
+	X_State[66]="ON";
+	X_Zip[66]="L5B 2C9";
+	X_Phone[66]="(905) 272-4645";
+	X_Email[66]="softmoc3@softmoc.com";
+	X_Lat[66]="43.592646";
+	X_Lng[66]="-79.644008";
+
+	X_StoreURL[67]="BayshoreMall";
+	X_ID[67]="12";
+	X_Name[67]="SoftMoc Bayshore Mall";
+	X_Addr[67]="100 Bayshore Drive, Unit C10";
+	X_City[67]="Nepean";
+	X_State[67]="ON";
+	X_Zip[67]="K2B 8C1";
+	X_Phone[67]="(613) 829-3628";
+	X_Email[67]="softmoc12@softmoc.com";
+	X_Lat[67]="45.347795";
+	X_Lng[67]="-75.80573";
+
+	X_StoreURL[68]="UpperCanadaMall";
+	X_ID[68]="4";
+	X_Name[68]="SoftMoc Upper Canada Mall";
+	X_Addr[68]="17600 Yonge Street, Unit GG14";
+	X_City[68]="Newmarket";
+	X_State[68]="ON";
+	X_Zip[68]="L3Y 4Z1";
+	X_Phone[68]="(905) 895-0582";
+	X_Email[68]="softmoc4@softmoc.com";
+	X_Lat[68]="44.056191";
+	X_Lng[68]="-79.486163";
+
+	X_StoreURL[69]="ShoeRackNiagaraCollection";
+	X_ID[69]="312";
+	X_Name[69]="SoftMoc Shoe Rack Niagara Collection";
+	X_Addr[69]="300 Taylor Road, Unit #437";
+	X_City[69]="Niagara On The Lake";
+	X_State[69]="ON";
+	X_Zip[69]="L0S 1J0";
+	X_Phone[69]="(905) 988-9082";
+	X_Email[69]="softmoc312@softmoc.com";
+	X_Lat[69]="43.157017";
+	X_Lng[69]="-79.167047";
+
+	X_StoreURL[70]="NorthgateShoppingCentre";
+	X_ID[70]="62";
+	X_Name[70]="SoftMoc Northgate Shopping Centre";
+	X_Addr[70]="1500 Fisher St., Unit 141B";
+	X_City[70]="North Bay";
+	X_State[70]="ON";
+	X_Zip[70]="P1B 2H3";
+	X_Phone[70]="(705) 476-2022";
+	X_Email[70]="softmoc62@softmoc.com";
+	X_Lat[70]="46.314141";
+	X_Lng[70]="-79.440764";
+
+	X_StoreURL[71]="OakvillePlace";
+	X_ID[71]="75";
+	X_Name[71]="SoftMoc Oakville Place";
+	X_Addr[71]="240 Leighland Ave., Unit 243";
+	X_City[71]="Oakville";
+	X_State[71]="ON";
+	X_Zip[71]="L6H 3H6";
+	X_Phone[71]="(905) 337-0241";
+	X_Email[71]="softmoc75@softmoc.com";
+	X_Lat[71]="43.46197";
+	X_Lng[71]="-79.687034";
+
+	X_StoreURL[72]="PlaceDOrleans";
+	X_ID[72]="47";
+	X_Name[72]="SoftMoc Place D'Orleans";
+	X_Addr[72]="110 Place D'Orleans Dr., Unit 1060";
+	X_City[72]="Orleans";
+	X_State[72]="ON";
+	X_Zip[72]="K1C 2L9";
+	X_Phone[72]="(613) 590-1899";
+	X_Email[72]="softmoc47@softmoc.com";
+	X_Lat[72]="45.47877";
+	X_Lng[72]="-75.515289";
+
+	X_StoreURL[73]="OshawaCentre";
+	X_ID[73]="6";
+	X_Name[73]="SoftMoc Oshawa Centre";
+	X_Addr[73]="419 King St. West & Stevenson, Unit#  2162A";
+	X_City[73]="Oshawa";
+	X_State[73]="ON";
+	X_Zip[73]="L1J 2K5";
+	X_Phone[73]="(905) 436-0707";
+	X_Email[73]="softmoc6@softmoc.com";
+	X_Lat[73]="43.889279";
+	X_Lng[73]="-78.879225";
+
+	X_StoreURL[74]="BillingsBridgeMall";
+	X_ID[74]="10";
+	X_Name[74]="SoftMoc Billings Bridge Mall";
+	X_Addr[74]="2269 Riverside Dr., Unit 171";
+	X_City[74]="Ottawa";
+	X_State[74]="ON";
+	X_Zip[74]="K1H 8K2";
+	X_Phone[74]="(613) 249-8509";
+	X_Email[74]="softmoc10@softmoc.com";
+	X_Lat[74]="45.385902";
+	X_Lng[74]="-75.677339";
+
+	X_StoreURL[75]="CarlingwoodMall";
+	X_ID[75]="11";
+	X_Name[75]="SoftMoc Carlingwood Mall";
+	X_Addr[75]="2121 Carling Avenue";
+	X_City[75]="Ottawa";
+	X_State[75]="ON";
+	X_Zip[75]="K2A 1H2";
+	X_Phone[75]="(613) 722-8447";
+	X_Email[75]="softmoc11@softmoc.com";
+	X_Lat[75]="45.372815";
+	X_Lng[75]="-75.768587";
+
+	X_StoreURL[76]="RideauCentre";
+	X_ID[76]="103";
+	X_Name[76]="SoftMoc Rideau Centre";
+	X_Addr[76]="50 Rideau Street, Unit 387B";
+	X_City[76]="Ottawa";
+	X_State[76]="ON";
+	X_Zip[76]="K1N 9J7";
+	X_Phone[76]="(613) 241-9133";
+	X_Email[76]="softmoc103@softmoc.com";
+	X_Lat[76]="45.425611";
+	X_Lng[76]="-75.691914";
+
+	X_StoreURL[77]="ShoeRackKanataOutlets";
+	X_ID[77]="314";
+	X_Name[77]="SoftMoc Shoe Rack Kanata Outlets";
+	X_Addr[77]="8555  Campeau Drive, Unit 968";
+	X_City[77]="Ottawa";
+	X_State[77]="ON";
+	X_Zip[77]="K2T 0K5";
+	X_Phone[77]="(613) 435-2162";
+	X_Email[77]="softmoc314@softmoc.com";
+	X_Lat[77]="45.297513";
+	X_Lng[77]="-75.937798";
+
+	X_StoreURL[78]="StLaurentShoppingCentre";
+	X_ID[78]="17";
+	X_Name[78]="SoftMoc St. Laurent Shopping Centre";
+	X_Addr[78]="1200 Blvd. St. Laurent, Unit# 252";
+	X_City[78]="Ottawa";
+	X_State[78]="ON";
+	X_Zip[78]="K1K 3B8";
+	X_Phone[78]="(613) 742-6209";
+	X_Email[78]="softmoc17@softmoc.com";
+	X_Lat[78]="45.421497";
+	X_Lng[78]="-75.638953";
+
+	X_StoreURL[79]="LansdownePlace";
+	X_ID[79]="60";
+	X_Name[79]="SoftMoc Lansdowne Place";
+	X_Addr[79]="645 Lansdowne St. West, Unit 143";
+	X_City[79]="Peterborough";
+	X_State[79]="ON";
+	X_Zip[79]="K9J 7Y5";
+	X_Phone[79]="(705) 743-9494";
+	X_Email[79]="softmoc60@softmoc.com";
+	X_Lat[79]="44.282235";
+	X_Lng[79]="-78.332267";
+
+	X_StoreURL[80]="PickeringTownCentre";
+	X_ID[80]="2";
+	X_Name[80]="SoftMoc Pickering Town Centre";
+	X_Addr[80]="1355 Kingston Road, Unit 202";
+	X_City[80]="Pickering";
+	X_State[80]="ON";
+	X_Zip[80]="L1V 1B8";
+	X_Phone[80]="(905) 831-7281";
+	X_Email[80]="softmoc2@softmoc.com";
+	X_Lat[80]="43.834746";
+	X_Lng[80]="-79.085324";
+
+	X_StoreURL[81]="HillcrestMall";
+	X_ID[81]="80";
+	X_Name[81]="SoftMoc Hillcrest Mall";
+	X_Addr[81]="9350 Yonge St., Unit E008";
+	X_City[81]="Richmond Hill";
+	X_State[81]="ON";
+	X_Zip[81]="L4C 5G2";
+	X_Phone[81]="(905) 737-2256";
+	X_Email[81]="softmoc80@softmoc.com";
+	X_Lat[81]="43.854327";
+	X_Lng[81]="-79.436863";
+
+	X_StoreURL[82]="ScarboroughTownCentre";
+	X_ID[82]="21";
+	X_Name[82]="SoftMoc Scarborough Town Centre";
+	X_Addr[82]="300 Borough Drive, Unit 69";
+	X_City[82]="Scarborough";
+	X_State[82]="ON";
+	X_Zip[82]="M1P 4P5";
+	X_Phone[82]="(416) 296-9187";
+	X_Email[82]="softmoc21@softmoc.com";
+	X_Lat[82]="43.776596";
+	X_Lng[82]="-79.258303";
+
+	X_StoreURL[83]="PenCentre";
+	X_ID[83]="7";
+	X_Name[83]="SoftMoc Pen Centre";
+	X_Addr[83]="221 Glendale Ave., Unit 115";
+	X_City[83]="St. Catharines";
+	X_State[83]="ON";
+	X_Zip[83]="L2T 2K9";
+	X_Phone[83]="(905) 988-9511";
+	X_Email[83]="softmoc7@softmoc.com";
+	X_Lat[83]="43.137219";
+	X_Lng[83]="-79.225422";
+
+	X_StoreURL[84]="ShoeRackStCatharines";
+	X_ID[84]="302";
+	X_Name[84]="SoftMoc Shoe Rack St. Catharines";
+	X_Addr[84]="First Pro Garden City, 420 Vansickle Road, Unit 6A";
+	X_City[84]="St. Catharines";
+	X_State[84]="ON";
+	X_Zip[84]="L2R 6P9";
+	X_Phone[84]="(905) 988-1671";
+	X_Email[84]="softmoc302@softmoc.com";
+	X_Lat[84]="43.15424";
+	X_Lng[84]="-79.269139";
+
+	X_StoreURL[85]="EastgateMall";
+	X_ID[85]="55";
+	X_Name[85]="SoftMoc Eastgate Mall";
+	X_Addr[85]="75 Centennial Parkway North, Unit C1";
+	X_City[85]="Stoney Creek";
+	X_State[85]="ON";
+	X_Zip[85]="L8E 2P2";
+	X_Phone[85]="(905) 560-7483";
+	X_Email[85]="softmoc55@softmoc.com";
+	X_Lat[85]="43.230945";
+	X_Lng[85]="-79.765971";
+
+	X_StoreURL[86]="NewSudburyCentre";
+	X_ID[86]="28";
+	X_Name[86]="SoftMoc New Sudbury Centre";
+	X_Addr[86]="1349 LaSalle Blvd., Unit 51B";
+	X_City[86]="Sudbury";
+	X_State[86]="ON";
+	X_Zip[86]="P3A 1Z2";
+	X_Phone[86]="(705) 525-0271";
+	X_Email[86]="softmoc28@softmoc.com";
+	X_Lat[86]="46.519616";
+	X_Lng[86]="-80.946106";
+
+	X_StoreURL[87]="PromenadeMall";
+	X_ID[87]="26";
+	X_Name[87]="SoftMoc Promenade Mall";
+	X_Addr[87]="1 Promenade Circle, Unit B233";
+	X_City[87]="Thornhill";
+	X_State[87]="ON";
+	X_Zip[87]="L4J 4P8";
+	X_Phone[87]="(905) 886-3787";
+	X_Email[87]="softmoc26@softmoc.com";
+	X_Lat[87]="43.806158";
+	X_Lng[87]="-79.452385";
+
+	X_StoreURL[88]="IntercityShoppingCentre";
+	X_ID[88]="20";
+	X_Name[88]="SoftMoc Intercity Shopping Centre";
+	X_Addr[88]="1000  Fort William Road, Suite 26A";
+	X_City[88]="Thunder Bay";
+	X_State[88]="ON";
+	X_Zip[88]="P7B 6B8";
+	X_Phone[88]="(807) 622-2543";
+	X_Email[88]="softmoc20@softmoc.com";
+	X_Lat[88]="48.403097";
+	X_Lng[88]="-89.244327";
+
+	X_StoreURL[89]="TimminsSquare";
+	X_ID[89]="317";
+	X_Name[89]="SoftMoc Timmins Square";
+	X_Addr[89]="1500 Riverside Drive, Unit 11AB";
+	X_City[89]="Timmins";
+	X_State[89]="ON";
+	X_Zip[89]="P4R 1A1";
+	X_Phone[89]="(705) 360-5344";
+	X_Email[89]="softmoc317@softmoc.com";
+	X_Lat[89]="48.474166";
+	X_Lng[89]="-81.382301";
+
+	X_StoreURL[90]="BloorStreetWest";
+	X_ID[90]="46";
+	X_Name[90]="SoftMoc Bloor St West";
+	X_Addr[90]="2266 Bloor St. West";
+	X_City[90]="Toronto";
+	X_State[90]="ON";
+	X_Zip[90]="M6S 1N9";
+	X_Phone[90]="(416) 769-7231";
+	X_Email[90]="softmoc46@softmoc.com";
+	X_Lat[90]="43.650854";
+	X_Lng[90]="-79.478148";
+
+	X_StoreURL[91]="DufferinMall";
+	X_ID[91]="69";
+	X_Name[91]="SoftMoc Dufferin Mall";
+	X_Addr[91]="900 Dufferin St., Unit 145";
+	X_City[91]="Toronto";
+	X_State[91]="ON";
+	X_Zip[91]="M6H 4A9";
+	X_Phone[91]="(416) 536-3850";
+	X_Email[91]="softmoc69@softmoc.com";
+	X_Lat[91]="43.654754";
+	X_Lng[91]="-79.435676";
+
+	X_StoreURL[92]="TorontoEatonCentre";
+	X_ID[92]="1";
+	X_Name[92]="SoftMoc Toronto Eaton Centre";
+	X_Addr[92]="220 Yonge Street, Level 1";
+	X_City[92]="Toronto";
+	X_State[92]="ON";
+	X_Zip[92]="M5B 2H1";
+	X_Phone[92]="(416) 595-0112";
+	X_Email[92]="softmoc1@softmoc.com";
+	X_Lat[92]="43.653096";
+	X_Lng[92]="-79.380211";
+
+	X_StoreURL[93]="YongeEglinton";
+	X_ID[93]="15";
+	X_Name[93]="SoftMoc Yonge & Eglinton";
+	X_Addr[93]="2299 Yonge St";
+	X_City[93]="Toronto";
+	X_State[93]="ON";
+	X_Zip[93]="M4P 2C6";
+	X_Phone[93]="(416) 482-9028";
+	X_Email[93]="softmoc15@softmoc.com";
+	X_Lat[93]="43.707688";
+	X_Lng[93]="-79.398308";
+
+	X_StoreURL[94]="YorkdaleShoppingCentre";
+	X_ID[94]="63";
+	X_Name[94]="SoftMoc Yorkdale Shopping Centre";
+	X_Addr[94]="3401 Dufferin Street, Unit 98";
+	X_City[94]="Toronto";
+	X_State[94]="ON";
+	X_Zip[94]="M6A 2T9";
+	X_Phone[94]="(416) 787-5212";
+	X_Email[94]="softmoc63@softmoc.com";
+	X_Lat[94]="43.725376";
+	X_Lng[94]="-79.454201";
+
+	X_StoreURL[95]="ShoeRackVaughanMills";
+	X_ID[95]="301";
+	X_Name[95]="SoftMoc Shoe Rack Vaughan Mills";
+	X_Addr[95]="1 Bass Pro Mills Drive, Unit 280";
+	X_City[95]="Vaughan";
+	X_State[95]="ON";
+	X_Zip[95]="L4K 5W4";
+	X_Phone[95]="(905) 738-9095";
+	X_Email[95]="softmoc301@softmoc.com";
+	X_Lat[95]="43.825897";
+	X_Lng[95]="-79.537266";
+
+	X_StoreURL[96]="ConestogaMall";
+	X_ID[96]="64";
+	X_Name[96]="SoftMoc Conestoga Mall";
+	X_Addr[96]="550 King Street North, Unit B1A";
+	X_City[96]="Waterloo";
+	X_State[96]="ON";
+	X_Zip[96]="N2L 5W6";
+	X_Phone[96]="(519) 883-0220";
+	X_Email[96]="softmoc64@softmoc.com";
+	X_Lat[96]="43.497411";
+	X_Lng[96]="-80.527074";
+
+	X_StoreURL[97]="whitbywarehousestore";
+	X_ID[97]="99";
+	X_Name[97]="SoftMoc Inc.";
+	X_Addr[97]="1400 Hopkins Street, Units 3 & 4";
+	X_City[97]="Whitby";
+	X_State[97]="ON";
+	X_Zip[97]="L1N 2C3";
+	X_Phone[97]="(905) 665-8119";
+	X_Email[97]="softmoc99@softmoc.com";
+	X_Lat[97]="43.871562";
+	X_Lng[97]="-78.917477";
+
+	X_StoreURL[98]="FairviewMall";
+	X_ID[98]="25";
+	X_Name[98]="SoftMoc Fairview Mall";
+	X_Addr[98]="1800 Sheppard Avenue E., Unit 1018";
+	X_City[98]="Willowdale";
+	X_State[98]="ON";
+	X_Zip[98]="M2J 5A7";
+	X_Phone[98]="(416) 497-1717";
+	X_Email[98]="softmoc25@softmoc.com";
+	X_Lat[98]="43.77782";
+	X_Lng[98]="-79.344407";
+
+	X_StoreURL[99]="DevonshireMall";
+	X_ID[99]="23";
+	X_Name[99]="SoftMoc Devonshire Mall";
+	X_Addr[99]="3100 Howard Avenue, Unit E9";
+	X_City[99]="Windsor";
+	X_State[99]="ON";
+	X_Zip[99]="N8X 3Y8";
+	X_Phone[99]="(519) 250-1298";
+	X_Email[99]="softmoc23@softmoc.com";
+	X_Lat[99]="42.274741";
+	X_Lng[99]="-83.002908";
+
+	X_StoreURL[100]="ShoeRackCharlottetown";
+	X_ID[100]="305";
+	X_Name[100]="SoftMoc Shoe Rack Charlottetown";
+	X_Addr[100]="670 University Avenue, Unit 101";
+	X_City[100]="Charlottetown";
+	X_State[100]="PE";
+	X_Zip[100]="C1E 1H6";
+	X_Phone[100]="(902) 892-2038";
+	X_Email[100]="softmoc305@softmoc.com";
+	X_Lat[100]="46.266291";
+	X_Lng[100]="-63.144374";
+
+	X_StoreURL[101]="CarrefourLaval";
+	X_ID[101]="82";
+	X_Name[101]="SoftMoc Carrefour Laval";
+	X_Addr[101]="3035 Boul. Le Carrefour, Unit H010A";
+	X_City[101]="Laval";
+	X_State[101]="QC";
+	X_Zip[101]="H7T 1C8";
+	X_Phone[101]="(450) 934-7463";
+	X_Email[101]="softmoc82@softmoc.com";
+	X_Lat[101]="45.569392";
+	X_Lng[101]="-73.751968";
+
+	X_StoreURL[102]="CentreRockland";
+	X_ID[102]="88";
+	X_Name[102]="SoftMoc Centre Rockland";
+	X_Addr[102]="2305 Chemin Rockland, Unit 1750";
+	X_City[102]="Mont-Royal";
+	X_State[102]="QC";
+	X_Zip[102]="H3P 3E9";
+	X_Phone[102]="(514) 419-6697";
+	X_Email[102]="softmoc88@softmoc.com";
+	X_Lat[102]="45.528655";
+	X_Lng[102]="-73.647277";
+
+	X_StoreURL[103]="CentreEatonMontreal";
+	X_ID[103]="102";
+	X_Name[103]="SoftMoc Centre Eaton Montreal";
+	X_Addr[103]="705 Rue Sainte-Catherine Ouest, Unit #2107B";
+	X_City[103]="Montréal";
+	X_State[103]="QC";
+	X_Zip[103]="H3B 4G5";
+	X_Phone[103]="(514) 284-9669";
+	X_Email[103]="softmoc102@softmoc.com";
+	X_Lat[103]="45.503188";
+	X_Lng[103]="-73.570532";
+
+	X_StoreURL[104]="LesGaleriesdAnjou";
+	X_ID[104]="83";
+	X_Name[104]="SoftMoc Les Galeries d'Anjou";
+	X_Addr[104]="7999 Boul. Des-Galeries-d'Anjou, Unit E011";
+	X_City[104]="Montréal";
+	X_State[104]="QC";
+	X_Zip[104]="H1M 1W9";
+	X_Phone[104]="(438) 383-7638";
+	X_Email[104]="softmoc83@softmoc.com";
+	X_Lat[104]="45.600976";
+	X_Lng[104]="-73.564375";
+
+	X_StoreURL[105]="StBruno";
+	X_ID[105]="87";
+	X_Name[105]="SoftMoc St. Bruno";
+	X_Addr[105]="1 Boul Des Promenades, Unit L10";
+	X_City[105]="St. Bruno";
+	X_State[105]="QC";
+	X_Zip[105]="J3V 5J5";
+	X_Phone[105]="(450) 482-6222";
+	X_Email[105]="softmoc87@softmoc.com";
+	X_Lat[105]="45.505939";
+	X_Lng[105]="-73.378718";
+
+	X_StoreURL[106]="CornwallCentre";
+	X_ID[106]="74";
+	X_Name[106]="SoftMoc Cornwall Centre";
+	X_Addr[106]="2102 11th Ave, Unit T035A";
+	X_City[106]="Regina";
+	X_State[106]="SK";
+	X_Zip[106]="S4P 3Y6";
+	X_Phone[106]="(306) 757-1035";
+	X_Email[106]="softmoc74@softmoc.com";
+	X_Lat[106]="50.451345";
+	X_Lng[106]="-104.610416";
+
+	X_StoreURL[107]="MidtownPlaza";
+	X_ID[107]="73";
+	X_Name[107]="SoftMoc Midtown Plaza";
+	X_Addr[107]="201-1st Avenue South, Unit T221";
+	X_City[107]="Saskatoon";
+	X_State[107]="SK";
+	X_Zip[107]="S7K 1J5";
+	X_Phone[107]="(306) 652-0999";
+	X_Email[107]="softmoc73@softmoc.com";
+	X_Lat[107]="52.127831";
+	X_Lng[107]="-106.666928";
+
+var X_Num=108;
+
+var CityArray=new Array();
+
+		CityArray[0]="";
+
+		CityArray[0]+="\tCalgary";
+
+		CityArray[0]+="\tEdmonton";
+
+		CityArray[0]+="\tGrande Prairie";
+
+		CityArray[0]+="\tLethbridge";
+
+		CityArray[0]+="\tMedicine Hat";
+
+		CityArray[0]+="\tRed Deer";
+
+		CityArray[0]+="\tRocky View";
+
+		CityArray[1]="";
+
+		CityArray[1]+="\tBurnaby";
+
+		CityArray[1]+="\tCoquitlam";
+
+		CityArray[1]+="\tKamloops";
+
+		CityArray[1]+="\tKelowna";
+
+		CityArray[1]+="\tLangley";
+
+		CityArray[1]+="\tNanaimo";
+
+		CityArray[1]+="\tNew Westminster";
+
+		CityArray[1]+="\tPrince George";
+
+		CityArray[1]+="\tRichmond";
+
+		CityArray[1]+="\tSurrey";
+
+		CityArray[1]+="\tVictoria";
+
+		CityArray[1]+="\tWest Vancouver";
+
+		CityArray[2]="";
+
+		CityArray[2]+="\tBrandon";
+
+		CityArray[2]+="\tWinnipeg";
+
+		CityArray[3]="";
+
+		CityArray[3]+="\tDieppe";
+
+		CityArray[3]+="\tFredericton";
+
+		CityArray[3]+="\tSaint John";
+
+		CityArray[4]="";
+
+		CityArray[4]+="\tSt. John's";
+
+		CityArray[5]="";
+
+		CityArray[5]+="\tBedford";
+
+		CityArray[5]+="\tDartmouth";
+
+		CityArray[5]+="\tHalifax";
+
+		CityArray[5]+="\tSydney";
+
+		CityArray[6]="";
+
+		CityArray[6]+="\tAjax";
+
+		CityArray[6]+="\tBarrie";
+
+		CityArray[6]+="\tBelleville";
+
+		CityArray[6]+="\tBrampton";
+
+		CityArray[6]+="\tBrantford";
+
+		CityArray[6]+="\tBurlington";
+
+		CityArray[6]+="\tCambridge";
+
+		CityArray[6]+="\tCookstown";
+
+		CityArray[6]+="\tEtobicoke";
+
+		CityArray[6]+="\tGuelph";
+
+		CityArray[6]+="\tHamilton";
+
+		CityArray[6]+="\tKingston";
+
+		CityArray[6]+="\tKitchener";
+
+		CityArray[6]+="\tLondon";
+
+		CityArray[6]+="\tMarkham";
+
+		CityArray[6]+="\tMississauga";
+
+		CityArray[6]+="\tNepean";
+
+		CityArray[6]+="\tNewmarket";
+
+		CityArray[6]+="\tNiagara On The Lake";
+
+		CityArray[6]+="\tNorth Bay";
+
+		CityArray[6]+="\tOakville";
+
+		CityArray[6]+="\tOrleans";
+
+		CityArray[6]+="\tOshawa";
+
+		CityArray[6]+="\tOttawa";
+
+		CityArray[6]+="\tPeterborough";
+
+		CityArray[6]+="\tPickering";
+
+		CityArray[6]+="\tRichmond Hill";
+
+		CityArray[6]+="\tScarborough";
+
+		CityArray[6]+="\tSt. Catharines";
+
+		CityArray[6]+="\tStoney Creek";
+
+		CityArray[6]+="\tSudbury";
+
+		CityArray[6]+="\tThornhill";
+
+		CityArray[6]+="\tThunder Bay";
+
+		CityArray[6]+="\tTimmins";
+
+		CityArray[6]+="\tToronto";
+
+		CityArray[6]+="\tVaughan";
+
+		CityArray[6]+="\tWaterloo";
+
+		CityArray[6]+="\tWhitby";
+
+		CityArray[6]+="\tWillowdale";
+
+		CityArray[6]+="\tWindsor";
+
+		CityArray[7]="";
+
+		CityArray[7]+="\tCharlottetown";
+
+		CityArray[8]="";
+
+		CityArray[8]+="\tLaval";
+
+		CityArray[8]+="\tMont-Royal";
+
+		CityArray[8]+="\tMontréal";
+
+		CityArray[8]+="\tSt. Bruno";
+
+		CityArray[9]="";
+
+		CityArray[9]+="\tRegina";
+
+		CityArray[9]+="\tSaskatoon";
+
+var NumOfState=10;
+function ChangeState()
+{
+	var Default_City="" +document.SForm1.SearchCity.options[document.SForm1.SearchCity.selectedIndex].value;
+	Default_City=Default_City.toLowerCase();
+	var Default_City_Pos= -1;
+	this.document.SForm1.SearchCity.length=0;
+	this.document.SForm1.SearchCity[this.document.SForm1.SearchCity.length]= new Option("SELECT BY CITY", "");
+	this.document.SForm1.SearchCity.selectedIndex=0;
+	var X=this.document.SForm1.SearchState.selectedIndex;
+	if (X > 0)
+	{
+		var Tmp="";
+		for (var i=0; i < CityArray[X-1].length; i++)
+		{
+			if (CityArray[X-1].substring(i,i+1)=="\t")
+			{
+				if (Tmp!="")
+				{
+					this.document.SForm1.SearchCity[this.document.SForm1.SearchCity.length]= new Option(Tmp,Tmp);
+					if (Tmp.toLowerCase()==Default_City)
+						Default_City_Pos=this.document.SForm1.SearchCity.length-1;
+				}
+				Tmp="";
+			}
+			else
+				Tmp+=CityArray[X-1].substring(i,i+1);
+		}
+		if (Tmp!="")
+		{
+			this.document.SForm1.SearchCity[this.document.SForm1.SearchCity.length]= new Option(Tmp,Tmp);
+			if (Tmp.toLowerCase()==Default_City)
+				Default_City_Pos=this.document.SForm1.SearchCity.length-1;
+		}
+	}
+	if (Default_City_Pos >= 0)
+		this.document.SForm1.SearchCity.selectedIndex=Default_City_Pos;
+	GoLocSearch();
+}
+function GoLocSearch()
+{
+	FillMap();
+	var LocationResultArea=document.getElementById? document.getElementById("LocationResultArea"): document.all.LocationResultArea;
+	if (LocationResultArea == null)
+		return;
+	if (this.document.SForm1.SearchState.selectedIndex <0)
+	{
+		LocationResultArea.innerHTML = '<br><br><br><br><br>';
+		return;
+	}
+	var State="" +document.SForm1.SearchState.options[document.SForm1.SearchState.selectedIndex].value;
+	var City="" +document.SForm1.SearchCity.options[document.SForm1.SearchCity.selectedIndex].value;
+	if (document.SForm1.SearchState.selectedIndex<=0)
+		State="";
+	if (document.SForm1.SearchCity.selectedIndex<=0)
+		City="";
+	var StartPos=0;
+	for (var i=0; i < X_Num; i++)
+	{
+		if (((X_State[i]==State)||(State==""))  &&  ((X_City[i]==City)||(City=="")))
+			break;
+		StartPos++;
+	}
+	var Tmp='<table border="0" cellspacing="10" cellpadding="10" class="text  deviceWidth">';
+	i= -1;
+	for (var j=StartPos; j < X_Num; j++)
+	{
+		if (((X_State[j]!=State)&&(State!=""))  ||  ((X_City[j]!=City)&&(City!="")))
+			break;
+		i++;
+		if ((i+1) % 5==1)
+		{
+			if (i!=0)
+			{
+				Tmp+='</tr>';
+			}
+			Tmp+='<tr>';
+		}
+		Tmp+='<table border="0" cellspacing="0" cellpadding="0" class="deviceWidth" align="left"><tr><td class="textResult">'+FormatResult(j)+'</td></tr></table>';
+	}
+	if (i!=0)
+		Tmp+='</tr>';
+
+	Tmp+='</table>';
+
+	if (Tmp!= LocationResultArea.innerHTML)
+		LocationResultArea.innerHTML = Tmp;
+}
+function ChangeTab(Type)
+{
+	if (Type=="M")
+	{
+		MapTab.style.display="none";
+		FillMap();
+		LocationResultAreaTab.style.display="block";
+	}
+	else
+	{
+		MapTab.style.display="none";
+		LocationResultAreaTab.style.display="block";
+	}
+}
+function FormatResult_Map(i)
+{
+
+
+//	var Tmp='<table border="0" cellspacing="3"><tr><td colspan="2"><a href="storehomepage.asp?s=' + X_ID[i] + '" style="line-height:14px;text-decoration:none"><b>';
+	var Tmp='<table border="0" cellspacing="3"><tr><td colspan="2"><a href="locations/' + X_StoreURL[i] + '" style="line-height:14px;text-decoration:none"><b>';
+
+
+	Tmp+='<font face="Arial" size="2" color="#740000" >' + X_Name[i]+'</font></b></td></tr>';
+
+
+//	Tmp+='<tr><td><a href="storehomepage.asp?s=' + X_ID[i] + '" style="line-height:14px;text-decoration:none"><font face="Arial" size="1" color="#242424" >';
+	Tmp+='<tr><td><a href="locations/' + X_StoreURL[i] + '" style="line-height:14px;text-decoration:none"><font face="Arial" size="1" color="#242424" >';
+
+
+	Tmp+=X_Addr[i]+'<br>';
+	Tmp+=X_City[i]+', '+X_State[i]+'<br>';
+	Tmp+=X_Zip[i]+', Canada<br>';
+	Tmp+=X_Phone[i]+'<br>';
+	if (X_Email[i]!="")
+	{
+		Tmp+='<a href="mailto:'+X_Email[i]+'"><u>'+X_Email[i]+'</u></a><br>';
+	}
+	Tmp+='</font>';
+	Tmp+='</a></td>';
+
+
+//	Tmp+='<td align="center" ><a href="storehomepage.asp?s=' + X_ID[i] + '" style="line-height:16px;text-decoration:none"><img border="0" src="http://www.softmoc.com/img/showstoredetail.gif"  width="76" height="58"></a></td></tr>';
+	Tmp+='<td align="center" ><a href="locations/' + X_StoreURL[i] + '" style="line-height:16px;text-decoration:none"><img border="0" src="http://www.softmoc.com/img/showstoredetail.gif"  width="76" height="58"></a></td></tr>';
+
+
+	return Tmp;
+}
+function FormatResult(i)
+{
+//	var Tmp='<a href="storehomepage.asp?s=' + X_ID[i] + '" style="line-height:16px;text-decoration:none">';
+	var Tmp='<a href="locations/' + X_StoreURL[i] + '" style="line-height:16px;text-decoration:none">';
+
+
+	Tmp+='<font face="Arial" size="2" color="#740000" >' + X_Name[i]+'</font></b><br><font face="Arial" size="1" color="#242424" >';
+	Tmp+=X_Addr[i]+'<br>';
+	Tmp+=X_City[i]+', '+X_State[i]+'<br>';
+	Tmp+=X_Zip[i]+', Canada<br>';
+	Tmp+=X_Phone[i]+'<br>';
+	if (X_Email[i]!="")
+	{
+		Tmp+='<a href="mailto:'+X_Email[i]+'"><u>'+X_Email[i]+'</u></a><br>';
+	}
+	Tmp+='</font>';
+	Tmp+='</a>';
+	return Tmp;
+}
+</script>
+<body>
+  <div id="wrapper"><div id="main">
+
+
+	<!-- Top Banner -->
+
+	<style>
+		#mobile-event-banner {
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+			width:100%;
+			padding:10px 10px;
+			background-color: #ed196f;
+			text-align: center;
+			font-size:16px;
+			margin: 0px 0px 5px;
+			display: none;
+		}
+		#mobile-event-banner a{
+			color:#fff;
+		}
+		@media screen and (max-width: 640px) {
+			#mobile-event-banner{
+				display: block;
+			}
+		}
+		@media only screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation: portrait) {
+			#mobile-event-banner{
+				display: block;
+			}
+		}
+		#topBanner {
+		  background-color: #fff;
+		  height: 50px;
+		  text-align: center;
+			background-image: url("http://www.softmoc.com/img/mothers-banner-bg.jpg");
+			background-repeat:repeat-x;
+			border-bottom: 1px solid #ccc;
+			position: relative;
+			-webkit-background-size:105px;
+			background-size:105px;
+		}
+		#left-flowers{
+			position: absolute;
+			left:0;
+			top:0;
+			width:199px;
+			height:auto;
+		}
+		#right-flowers{
+			position: absolute;
+			right:0;
+			top:0;
+			width:199px;
+			height:auto;
+		}
+	</style>
+
+	<div id="topBanner" class="hideMobile">
+	  <a href="/ca/systemshow-searchr_m1492?osc=softmoc+mothers+day+2016">
+		<img src="http://www.softmoc.com/img/mothers-banner.png" width="980" height="50"/>
+	  </a>
+	  <img src="http://www.softmoc.com/img/left-flowers.png" id="left-flowers">
+	  <img src="http://www.softmoc.com/img/right-flowers.png" id="right-flowers">
+	</div>
+
+
+	<!-- JCS Form -->
+	<div class="jcs-form mfp-hide" id="jcs-form">
+		<div class="jcs-title">
+		  <h1>Join the Club</h1>
+		</div>
+		<div class="jcs-sub-title">
+		  <h2>Sign Up to Our Newsletter &amp; Save 10% Off Your First Purchase Today</h2>
+		</div>
+
+		<div class="jcs-form-wrapper clearfix">
+		  <form action="/ca/webcustomerjoin.asp" method="POST" name="XJCSForm2" target="_top">
+			<input type="hidden" name="XCountry" value="Canada">
+			<input type="hidden" name="GoDo" value="0">
+			  <div class="jcs-email">
+				<input name="Email" id="email" class="no-mouseflow" onClick="return false;" onKeyPress="return CheckEnterKey('XJCSForm2_Submit()',event);" onFocus="if ((this.value=='Enter Your Email')||(this.value=='Entrez votre adresse courriel')){this.value=''}" onBlur="if (this.value==''){this.value='Enter Your Email'}" value='Enter Your Email' type="email">
+			  </div>
+			  <div class="jcs-btn">
+				<input name="SubmitButton" id="submitButton" type="button" value="Subscribe Now" id="SubmitButton" onClick="XJCSForm2_Submit(this)">
+			  </div>
+		  </form>
+		</div>
+
+	  <!-- This is where the error text gets rendered -->
+	  <div id="JoinText2"></div>
+
+		<div class="jcs-disclaimer">*Offer applies to new subscriptions only.</div>
+		<div class="jcs-privacy"><i class="fa fa-lock"></i> We hate spam and promise to keep your email safe.</div>
+	</div>
+	<!-- End JSC Form -->
+
+	<!--Full Size Header++++++++++++++++++++++++++++++++++++++++++++++-->
+	<div id="sub-header" class="deviceWidth hideMobile">
+
+		<div id="flagCombo">
+			<button id="countryFlagBtn">
+				<img src="http://www.softmoc.com/img/theflag-ca.png" width="62" height="42" border="0"><i class="fa fa-chevron-down"></i>
+			</button>
+			<div id="countryChange">
+
+				<a href="javascript:ChangeSiteCountry('ca-fr')"><img src="http://www.softmoc.comhttp://www.softmoc.com/img/theflag-ca.png" width="62" height="42" border="0"> CA (Français)</a>
+				<a href="javascript:ChangeSiteCountry('us')"><img src="http://www.softmoc.comhttp://www.softmoc.com/img/theflag-us.png" width="62" height="42" border="0"> USA</a>
+
+			</div>
+		</div>
+
+		<div class="hideMobile" id="my-acc-rewards">
+			<a href="/ca/frequentbuyerrewards.asp">
+				<img src="http://www.softmoc.com/img/my-rewards-logo.png" width="90" height="59">
+			</a>
+		</div>
+		<div class="hideMobile" id="sub-links">
+			<a href="/ca">Home</a>
+
+				<a href="/ca/locations.asp">Locations</a>
+
+			<span id="orderTrackingNavArea">
+				<a href="javascript:return false;" id="orderTrackingNavButton">Order Tracking</a>
+				<div id="trackingOrderBox">
+					<form class="orderTrackingForm" id="HeaderOrderTrackingForm" name="HeaderOrderTrackingForm" method="POST" action="/ca/ordertrackingreal.asp">
+						<div class="trackingLabel">Order ID</div>
+						<input type="text" name="T" placeholder="Order ID">
+						<div class="trackingLabel">Last Name</div>
+						<input type="text" name="L" placeholder="Last Name">
+						<button onClick="OrderTrackingForm_Submit();return false;">
+							<i class="fa fa-map-marker"></i> TRACK
+						</button>
+						<button type="button" id="orderTrackingCloseButton">
+							<i class="fa fa-times"></i> Close
+						</button>
+					</form>
+				</div>
+			</span>
+			<a href="/ca/customerservice.asp">Customer Service</a>
+			<a id="_lpChatBtn" href="https://server.iad.liveperson.net/hc/65474986/?cmd=file&amp;file=visitorWantsToChat&amp;site=65474986&amp;byhref=1&amp;imageUrl=https://server.iad.liveperson.net/hcp/Gallery/ChatButton-Gallery/English/Small/2c" target="chat65474986"
+					onclick="lpButtonCTTUrl = 'https://server.iad.liveperson.net/hc/65474986/?cmd=file&amp;file=visitorWantsToChat&amp;site=65474986&amp;imageUrl=https://server.iad.liveperson.net/hcp/Gallery/ChatButton-Gallery/English/Small/2c&amp;referrer='+escape(document.location); lpButtonCTTUrl = (typeof(lpAppendVisitorCookies) != 'undefined' ? lpAppendVisitorCookies(lpButtonCTTUrl) : lpButtonCTTUrl); lpButtonCTTUrl = ((typeof(lpMTag)!='undefined' &amp;&amp; typeof(lpMTag.addFirstPartyCookies)!='undefined')?lpMTag.addFirstPartyCookies(lpButtonCTTUrl):lpButtonCTTUrl);window.open(lpButtonCTTUrl,'chat65474986','width=475,height=400,resizable=yes');return false;">Live Help</a>
+
+				<a href="/ca/myfavorites.asp">My Favourites</a>
+
+				    <a href="javascript:ChangeSysLang('F')">Français</a>
+
+		</div>
+
+		<div class="deviceWidth hideMobile" id="MainMenuCartArea" style="float:right;">
+			<a href="/ca/shoppingcart.asp" id="cart-status"><img src="http://www.softmoc.com/img/shopping-cart-red2.png" onmouseover="PopMiniCart('','','','')" width="18" height="15" id="cart_img"><b><font onmouseover="PopMiniCart('','','','')">&nbsp;&nbsp;</font><font color="#FE0C0C" id="CartHeaderArea" style="position:relative;top:-3px;" onmouseover="PopMiniCart('','','','')"></font></b></a>
+		</div>
+	</div>
+	<!--Full Size Header------------------------------------------------>
+
+	<!--Mobile Header & Menu++++++++++++++++++++++++++++++++++++++++++++++-->
+	<div id="mobile-header" class="deviceWidth Fixed">
+		<a href="#mobile-menu" id="menu-icon"><i class="fa fa-bars fa-2x"></i></a>
+
+			<a href="/ca"><img src="http://www.softmoc.com/img/softmoc-logo-us-m.png" width="163" height="26" id="logo-mobile"></a>
+
+		<div class="deviceWidth" id="MobileMenuCartArea">
+			<a href="/ca/shoppingcart.asp" id="cart-status">
+				<span id="responsiveCartCount" style="display:none"></span>
+				<img src="http://www.softmoc.com/img/shopping-cart-red2.png" width="18" height="15" id="cart_img">
+			</a>
+			<a href="#myaccount-menu" id="myaccount-status" ><i class="fa fa-user"></i></a>
+			<span id="header-search"><i class="fa fa-search"></i></span>
+		</div>
+	</div>
+
+	<nav id="myaccount-menu">
+		<ul>
+		<!--	<li><a href="javascript:return false;">About</a></li>-->
+			<li><a href="/ca/memberlogin.asp">Login</a></li>
+			<li><a href="/ca/memberforgetpwd.asp">Forgot Password</a></li>
+			<li><a href="/ca/register">Register - It's FREE!</a></li>
+		</ul>
+	</nav>
+
+    <nav id="mobile-menu">
+      <ul>
+		<li class="redmenu"><span>WOMENS</span>
+          <ul>
+			<li><a href="/ca/womens-shoes">Women's Shoe Shop</a></li>
+
+				<li><a href="/ca/womens-shoes/new+arrivals%21">New Arrivals!</a></li>
+
+				<li><a href="/ca/womens-shoes/athletic+shoes">Athletic Shoes</a></li>
+
+				<li><a href="/ca/womens-shoes/sandals">Sandals</a></li>
+
+				<li><a href="/ca/womens-shoes/casual+shoes">Casual Shoes</a></li>
+
+				<li><a href="/ca/womens-shoes/dress+shoes">Dress Shoes</a></li>
+
+				<li><a href="/ca/womens-shoes/casual+boots">Casual Boots</a></li>
+
+				<li><a href="/ca/womens-shoes/clogs">Clogs</a></li>
+
+				<li><a href="/ca/womens-shoes/moccasins+%26+mukluks">Moccasins & Mukluks</a></li>
+
+				<li><a href="/ca/womens-shoes/dress+boots">Dress Boots</a></li>
+
+				<li><a href="/ca/womens-shoes/slippers">Slippers</a></li>
+
+				<li><a href="/ca/womens-shoes/rainwear">Rainwear</a></li>
+
+				<li><a href="/ca/womens-shoes/winter+boots">Winter Boots</a></li>
+
+				<li><a href="/ca/womens-shoes/handbags">Handbags</a></li>
+
+				<li><a href="/ca/womens-shoes/accessories">Accessories</a></li>
+
+				<li><a href="/ca/womens-shoes/shoe+care">Shoe Care</a></li>
+
+				<li><a href="/ca/womens-shoes/mittens+and+gloves">Mittens and Gloves</a></li>
+
+          </ul>
+        </li>
+		<li class="redmenu"><span>MENS</span>
+          <ul>
+  		    <li><a href="/ca/mens-shoes">Men's Shoe Shop</a></li>
+
+				<li><a href="/ca/mens-shoes/new+arrivals%21">New Arrivals!</a></li>
+
+				<li><a href="/ca/mens-shoes/athletic+shoes">Athletic Shoes</a></li>
+
+				<li><a href="/ca/mens-shoes/sandals">Sandals</a></li>
+
+				<li><a href="/ca/mens-shoes/casual+shoes">Casual Shoes</a></li>
+
+				<li><a href="/ca/mens-shoes/dress+shoes">Dress Shoes</a></li>
+
+				<li><a href="/ca/mens-shoes/casual+boots">Casual Boots</a></li>
+
+				<li><a href="/ca/mens-shoes/clogs">Clogs</a></li>
+
+				<li><a href="/ca/mens-shoes/moccasins+%26+mukluks">Moccasins & Mukluks</a></li>
+
+				<li><a href="/ca/mens-shoes/slippers">Slippers</a></li>
+
+				<li><a href="/ca/mens-shoes/rainwear">Rainwear</a></li>
+
+				<li><a href="/ca/mens-shoes/winter+boots">Winter Boots</a></li>
+
+				<li><a href="/ca/mens-shoes/accessories">Accessories</a></li>
+
+				<li><a href="/ca/mens-shoes/shoe+care">Shoe Care</a></li>
+
+				<li><a href="/ca/mens-shoes/bags+%26+wallets">Bags & Wallets</a></li>
+
+          </ul>
+        </li>
+		<li class="redmenu"><span>KIDS</span>
+			<ul>
+				<li><a href="/ca/girls-shoes">Girls Shoe Shop</a></li>
+				<li><a href="/ca/boys-shoes">Boys Shoe Shop</a></li>
+				<li><a href="/ca/baby-shoes">Baby Shoe Shop</a></li>
+			</ul>
+		</li>
+		<li class="redmenu"><span>BRANDS</span>
+			<ul>
+			  <li><a href="/ca/brands">Brands</a></li>
+
+					<li><a href="/ca/adidas">Adidas</a></li>
+
+					<li><a href="/ca/aerosoles">Aerosoles</a></li>
+
+					<li><a href="/ca/anuschka">Anuschka</a></li>
+
+					<li><a href="/ca/big+buddha">Big Buddha</a></li>
+
+					<li><a href="/ca/birkenstock">Birkenstock</a></li>
+
+					<li><a href="/ca/blundstone">Blundstone</a></li>
+
+					<li><a href="/ca/bogs">Bogs</a></li>
+
+					<li><a href="/ca/bostonian">Bostonian</a></li>
+
+					<li><a href="/ca/cabrelli">Cabrelli</a></li>
+
+					<li><a href="/ca/cafeina">Cafeina</a></li>
+
+					<li><a href="/ca/ciao">Ciao</a></li>
+
+					<li><a href="/ca/clarks">Clarks</a></li>
+
+					<li><a href="/ca/co%2Dlab">Co-Lab</a></li>
+
+					<li><a href="/ca/columbia">Columbia</a></li>
+
+					<li><a href="/ca/converse">Converse</a></li>
+
+					<li><a href="/ca/cougar">Cougar</a></li>
+
+					<li><a href="/ca/crocs">Crocs</a></li>
+
+					<li><a href="/ca/cushe">Cushe</a></li>
+
+					<li><a href="/ca/dav">Dav</a></li>
+
+					<li><a href="/ca/dockers">Dockers</a></li>
+
+					<li><a href="/ca/dr+martens">Dr Martens</a></li>
+
+					<li><a href="/ca/duray">Duray</a></li>
+
+					<li><a href="/ca/foamtreads">Foamtreads</a></li>
+
+					<li><a href="/ca/fossil">FOSSIL</a></li>
+
+					<li><a href="/ca/fraas">Fraas</a></li>
+
+					<li><a href="/ca/franco+sarto">Franco Sarto</a></li>
+
+					<li><a href="/ca/geox">Geox</a></li>
+
+					<li><a href="/ca/godik">Godik</a></li>
+
+					<li><a href="/ca/havaianas">Havaianas</a></li>
+
+					<li><a href="/ca/heelys">Heelys</a></li>
+
+					<li><a href="/ca/heys">Heys</a></li>
+
+					<li><a href="/ca/hot+sox">Hot Sox</a></li>
+
+					<li><a href="/ca/hunter">Hunter</a></li>
+
+					<li><a href="/ca/hush+puppies">Hush Puppies</a></li>
+
+					<li><a href="/ca/ipanema">Ipanema</a></li>
+
+					<li><a href="/ca/italian+shoemakers">Italian Shoemakers</a></li>
+
+					<li><a href="/ca/josef+seibel">Josef Seibel</a></li>
+
+					<li><a href="/ca/k%2Dswiss">K-SWISS</a></li>
+
+					<li><a href="/ca/kamik">Kamik</a></li>
+
+					<li><a href="/ca/keds">Keds</a></li>
+
+					<li><a href="/ca/keen">Keen</a></li>
+
+					<li><a href="/ca/kenneth+cole">Kenneth Cole</a></li>
+
+					<li><a href="/ca/lacoste">Lacoste</a></li>
+
+					<li><a href="/ca/lauren+by+ralph+lauren">Lauren by Ralph Lauren</a></li>
+
+					<li><a href="/ca/lucky+brand">Lucky Brand</a></li>
+
+					<li><a href="/ca/map">MAP</a></li>
+
+					<li><a href="/ca/marco+bianchini">Marco Bianchini</a></li>
+
+					<li><a href="/ca/mephisto">Mephisto</a></li>
+
+					<li><a href="/ca/merrell">Merrell</a></li>
+
+					<li><a href="/ca/moneysworth+%26+best">Moneysworth & Best</a></li>
+
+					<li><a href="/ca/multisac">MultiSac</a></li>
+
+					<li><a href="/ca/new+balance">New Balance</a></li>
+
+					<li><a href="/ca/olukai">OluKai</a></li>
+
+					<li><a href="/ca/orthaheel">Orthaheel</a></li>
+
+					<li><a href="/ca/pajar">Pajar</a></li>
+
+					<li><a href="/ca/palladium">Palladium</a></li>
+
+					<li><a href="/ca/paris+blues">Paris Blues</a></li>
+
+					<li><a href="/ca/pistil">Pistil</a></li>
+
+					<li><a href="/ca/polo">Polo</a></li>
+
+					<li><a href="/ca/reef">Reef</a></li>
+
+					<li><a href="/ca/rider+sandals">Rider Sandals</a></li>
+
+					<li><a href="/ca/robeez">Robeez</a></li>
+
+					<li><a href="/ca/romika">Romika</a></li>
+
+					<li><a href="/ca/roots">Roots</a></li>
+
+					<li><a href="/ca/s%2Dq">S-Q</a></li>
+
+					<li><a href="/ca/sam+edelman">Sam Edelman</a></li>
+
+					<li><a href="/ca/sanuk">Sanuk</a></li>
+
+					<li><a href="/ca/saucony">Saucony</a></li>
+
+					<li><a href="/ca/skechers">Skechers</a></li>
+
+					<li><a href="/ca/skechers+work">Skechers Work</a></li>
+
+					<li><a href="/ca/softmoc">SoftMoc</a></li>
+
+					<li><a href="/ca/softmoc+gift+card">SoftMoc Gift Card</a></li>
+
+					<li><a href="/ca/softmoc+shoe+care">SoftMoc Shoe Care</a></li>
+
+					<li><a href="/ca/sorel">Sorel</a></li>
+
+					<li><a href="/ca/sperry">Sperry</a></li>
+
+					<li><a href="/ca/steve+madden">Steve Madden</a></li>
+
+					<li><a href="/ca/stompeezfun">StompeezFun</a></li>
+
+					<li><a href="/ca/stride+rite">Stride Rite</a></li>
+
+					<li><a href="/ca/superfit">Superfit</a></li>
+
+					<li><a href="/ca/swiss+gear">Swiss Gear</a></li>
+
+					<li><a href="/ca/taos">Taos</a></li>
+
+					<li><a href="/ca/tempur%2Dpedic">Tempur-Pedic</a></li>
+
+					<li><a href="/ca/the+flexx">The Flexx</a></li>
+
+					<li><a href="/ca/the+north+face">The North Face</a></li>
+
+					<li><a href="/ca/timberland">Timberland</a></li>
+
+					<li><a href="/ca/ugg+australia">UGG Australia</a></li>
+
+					<li><a href="/ca/vans">Vans</a></li>
+
+					<li><a href="/ca/vionic">Vionic</a></li>
+
+					<li><a href="/ca/wolverine">Wolverine</a></li>
+
+			</ul>
+		</li>
+		<li class="redmenu"><span>CLEARANCE</span>
+			<ul>
+				<li><a href="/ca/womens-shoes/clearance">Women's Clearance</a></li>
+				<li><a href="/ca/mens-shoes/clearance">Men's Clearance</a></li>
+				<li><a href="/ca/girls-shoes/clearance">Girls Clearance</a></li>
+				<li><a href="/ca/boys-shoes/clearance">Boys Clearance</a></li>
+				<li><a href="/ca/baby-shoes/clearance">Baby Clearance</a></li>
+			</ul>
+		</li>
+		<li class="redmenu"><a href="/ca/handbags">HANDBAGS</a></li>
+        <li class="bluemenu">
+          <span id="myaccount-panel">My Account Rewards</span>
+          <ul>
+		<!--	<li><a href="javascript:return false;">About</a>-->
+			</li>
+
+				<li><a href="/ca/memberlogin.asp">Login</a>
+				</li>
+				<li><a href="/ca/memberforgetpwd.asp">Forgot Password</a>
+				</li>
+				<li><a href="/ca/register">Register - It's FREE!</a>
+				</li>
+
+          </ul>
+        </li>
+		<li><a href="/ca/myfavorites.asp">My Favourites</a></li>
+		<li><a href="/ca/locations.asp">Locations</a></li>
+		<li><a href="/ca/ordertrackingreal.asp">Order Tracking</a></li>
+		<li><a href="/ca/customerservice.asp">Customer Service</a></li>
+        <li><a href="https://server.iad.liveperson.net/hc/65474986/?cmd=file&file=visitorWantsToChat&site=65474986&byhref=1&imageUrl=https://server.iad.liveperson.net/hcp/Gallery/ChatButton-Gallery/English/Small/2c">Live Help</a></li>
+		<li><a href="/ca/faqs.asp">FAQs</a></li>
+
+
+			<li><a href="/ca/giftcards">Gift Cards</a></li>
+			<li><a href="/ca/giftcardchecking.asp"><nobr>Check Gift Card Balance</nobr></a></li>
+
+
+		<li><a href="/ca/shoesize.asp">Shoe Size Guide</a></li>
+		<li><a href="/ca/shipinfo.asp">Shipping Info</a></li>
+        <li><a href="/ca/privacystatement.asp">Privacy Statement</a></li>
+		<li><a href="/ca/rate"><nobr>Rate Your Experience</nobr></a></li>
+        </li>
+      </ul>
+    </nav>
+	<!--Mobile Header & Menu------------------------------------------------>
+
+
+
+	<div class="deviceWidth" id="layout">
+
+<div id="header">
+	<div id="logo-image" class="hideMobile">
+
+		<a href="/ca"><img src="http://www.softmoc.com/img/softmoc_ca_logo.png" width="180" height="64"></a>
+
+	</div>
+	<div id="search">
+		<a href="/ca/shipinfo.asp" id="free-shipping-exchanges-returns" class="hideMobile">
+
+		   <strong>FREE</strong> Shipping - <strong>FREE</strong> Exchanges - <strong>FREE</strong> Returns*
+
+		</a>
+		<a href="/ca/shipinfo.asp" id="restrictions" class="hideMobile">Some Restrictions Apply <em>&raquo;</em></a>
+		<form method="POST" action="SearchR.asp?P=7" name="SearchForm1">
+			<a href="javascript:GoQuickSearch('Y','ca','www.softmoc.com',this.document.SearchForm1.textfield.value)" id="search_btn"><i class="fa fa-search"></i></a>
+			<div class="inputOverflow">
+				<input name="textfield" type="text" id="textfield" onFocus="if ((this.value=='Search Shoes, Handbags, Accessories, etc.')||(this.value=='Chaussures, sacs à main, accessoires, etc.')){this.value=''}" onBlur="if (this.value==''){this.value='Search Shoes, Handbags, Accessories, etc.'}" onKeyPress="return CheckEnterKey('GoQuickSearch()',event);" value="Search Shoes, Handbags, Accessories, etc." maxlength="45">
+			</div>
+
+
+     <script type="text/javascript" src="//nxtcfm.s3.amazonaws.com/43b6e2cfcc8896b29d69a6cdf1aee686-ac.js"></script>
+
+			<div id="AdvancedSearch_IFRM_Area" class="hideMobile"> </div>
+		</form>
+	</div>
+	<div id="always-in-stock" class="hideMobile">
+
+			<a href="/ca/shipinfo.asp"><img src="http://www.softmoc.com/img/free-instore-pickup2.jpg" width="204" height="40" border="0"></a>
+
+	</div>
+</div>
+
+
+<div class="hideMobile" id="menu">
+	<ul id="nav">
+		<li id="nav-womens"> <a href="javascript:return false;" class="nolink">WOMENS</a>
+			<ul>
+				<li>
+					<h2><a href="/ca/womens-shoes">Women's Shoe Shop <i class="fa fa-chevron-right"></i></a></h2>
+					<table border="0" cellpadding="0" cellspacing="0">
+						<tr>
+							<td class="menu-category">
+								<h4>Departments</h4>
+
+									<a href="/ca/womens-shoes/athletic+shoes">Athletic Shoes</a>
+
+									<a href="/ca/womens-shoes/sandals">Sandals</a>
+
+									<a href="/ca/womens-shoes/casual+shoes">Casual Shoes</a>
+
+									<a href="/ca/womens-shoes/dress+shoes">Dress Shoes</a>
+
+									<a href="/ca/womens-shoes/casual+boots">Casual Boots</a>
+
+									<a href="/ca/womens-shoes/clogs">Clogs</a>
+
+									<a href="/ca/womens-shoes/moccasins+%26+mukluks">Moccasins & Mukluks</a>
+
+									<a href="/ca/womens-shoes/dress+boots">Dress Boots</a>
+
+									<a href="/ca/womens-shoes/slippers">Slippers</a>
+
+									<a href="/ca/womens-shoes/rainwear">Rainwear</a>
+
+									<a href="/ca/womens-shoes/winter+boots">Winter Boots</a>
+
+									<a href="/ca/womens-shoes/handbags">Handbags</a>
+
+									<a href="/ca/womens-shoes/accessories">Accessories</a>
+
+									<a href="/ca/womens-shoes/shoe+care">Shoe Care</a>
+
+									<a href="/ca/womens-shoes/mittens+and+gloves">Mittens and Gloves</a>
+
+							</td>
+							<td class="menu-category">
+								<h4>Popular Styles</h4>
+
+									<a href="/ca/systemshow-searchr_f1WOS_zs1SNK">Sneakers</a>
+
+									<a href="/ca/systemshow-searchr_f1WOS_zs1WAK">Walking Shoes</a>
+
+									<a href="/ca/systemshow-searchr_f1WOS_zs1BAT">Boat Shoes</a>
+
+									<a href="/ca/systemshow-searchr_f1WOS_zs1CAL">Casual Loafers</a>
+
+									<a href="/ca/systemshow-searchr_f1WOS_zs1CHS">Chelsea Boots</a>
+
+									<a href="/ca/systemshow-searchr_f1WOS_zs1RNB">Rain Boots</a>
+
+									<a href="/ca/systemshow-searchr_f1WOS_zs1FLT">Flats</a>
+
+									<a href="/ca/systemshow-searchr_f1WOS_zs1COX">Casual Oxfords</a>
+
+									<a href="/ca/systemshow-searchr_f1WOS_zs1WGS">Wedge Sandals</a>
+
+									<a href="/ca/systemshow-searchr_f1WOS_zs1MOC">Moccasins</a>
+
+									<a href="/ca/systemshow-searchr_f1WOS_zs1SPS">Sport Sandals</a>
+
+									<a href="/ca/systemshow-searchr_f1WOS_zs1CHK">Chukka Boots</a>
+
+									<a href="/ca/systemshow-searchr_f1WOS_zs1FBS">Footbed Sandals</a>
+
+									<a href="/ca/systemshow-searchr_f1WOS_zs1HEL">Heels</a>
+
+									<a href="/ca/systemshow-searchr_f1WOS_zs1WDG">Wedges</a>
+
+							</td>
+							<td class="menu-category">
+								<h4>Collections</h4>
+								<a href="/ca/systemshow-searchr_o207"  class="newarrivals" >New Arrivals!</a><a href="/ca/systemshow-searchr_o349"  >Feminine Loafers</a><a href="/ca/systemshow-searchr_o355"  >Sport it Up</a><a href="/ca/systemshow-searchr_o211"  >Flat Season</a><a href="/ca/systemshow-searchr_o260"  >Slingback into Spring</a><a href="/ca/systemshow-searchr_o268"  >Splash Proof</a>
+							</td>
+							<td>
+								<h4>Shop By Size</h4>
+
+								<table border="0" cellpadding="2" cellspacing="0" class="shop-by-size">
+
+											<tr>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1WOS_zm14';" type="button" value="4">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1WOS_zm14.5';" type="button" value="4.5">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1WOS_zm15';" type="button" value="5">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1WOS_zm15.5';" type="button" value="5.5">
+										</td>
+
+											</tr>
+
+											<tr>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1WOS_zm16';" type="button" value="6">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1WOS_zm16.5';" type="button" value="6.5">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1WOS_zm17';" type="button" value="7">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1WOS_zm17.5';" type="button" value="7.5">
+										</td>
+
+											</tr>
+
+											<tr>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1WOS_zm18';" type="button" value="8">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1WOS_zm18.5';" type="button" value="8.5">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1WOS_zm19';" type="button" value="9">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1WOS_zm19.5';" type="button" value="9.5">
+										</td>
+
+											</tr>
+
+											<tr>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1WOS_zm110';" type="button" value="10">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1WOS_zm110.5';" type="button" value="10.5">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1WOS_zm111';" type="button" value="11">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1WOS_zm111.5';" type="button" value="11.5">
+										</td>
+
+											</tr>
+
+											<tr>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1WOS_zm112';" type="button" value="12">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1WOS_zm113';" type="button" value="13">
+										</td>
+
+										</tr>
+
+								</table>
+								<h4>Shop By Colour</h4>
+
+								<table border="0" cellpadding="2" cellspacing="0" class="shop-by-color">
+
+											<tr>
+
+										<td background="http://www.softmoc.com/img/wcolor_Beige.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1WOS_zc1Beige';" title="Beige">
+											<span class="hint--top" data-hint="Beige">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Black.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1WOS_zc1Black';" title="Black">
+											<span class="hint--top" data-hint="Black">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Blue.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1WOS_zc1Blue';" title="Blue">
+											<span class="hint--top" data-hint="Blue">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Brown.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1WOS_zc1Brown';" title="Brown">
+											<span class="hint--top" data-hint="Brown">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Gold.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1WOS_zc1Gold';" title="Gold">
+											<span class="hint--top" data-hint="Gold">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Green.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1WOS_zc1Green';" title="Green">
+											<span class="hint--top" data-hint="Green">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+											</tr>
+
+											<tr>
+
+										<td background="http://www.softmoc.com/img/wcolor_Grey.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1WOS_zc1Grey';" title="Grey">
+											<span class="hint--top" data-hint="Grey">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Metallic.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1WOS_zc1Metallic';" title="Metallic">
+											<span class="hint--top" data-hint="Metallic">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Multi.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1WOS_zc1Multi';" title="Multi">
+											<span class="hint--top" data-hint="Multi">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Off-white.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1WOS_zc1Off-white';" title="Off-white">
+											<span class="hint--top" data-hint="Off-white">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Orange.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1WOS_zc1Orange';" title="Orange">
+											<span class="hint--top" data-hint="Orange">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Pink.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1WOS_zc1Pink';" title="Pink">
+											<span class="hint--top" data-hint="Pink">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+											</tr>
+
+											<tr>
+
+										<td background="http://www.softmoc.com/img/wcolor_Purple.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1WOS_zc1Purple';" title="Purple">
+											<span class="hint--top" data-hint="Purple">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Red.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1WOS_zc1Red';" title="Red">
+											<span class="hint--top" data-hint="Red">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Silver.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1WOS_zc1Silver';" title="Silver">
+											<span class="hint--top" data-hint="Silver">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Tan.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1WOS_zc1Tan';" title="Tan">
+											<span class="hint--top" data-hint="Tan">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Taupe.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1WOS_zc1Taupe';" title="Taupe">
+											<span class="hint--top" data-hint="Taupe">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Turquoise.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1WOS_zc1Turquoise';" title="Turquoise">
+											<span class="hint--top" data-hint="Turquoise">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+											</tr>
+
+											<tr>
+
+										<td background="http://www.softmoc.com/img/wcolor_White.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1WOS_zc1White';" title="White">
+											<span class="hint--top" data-hint="White">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Yellow.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1WOS_zc1Yellow';" title="Yellow">
+											<span class="hint--top" data-hint="Yellow">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										</tr>
+
+								</table>
+							</td>
+						</tr>
+					</table>
+				</li>
+			</ul>
+		</li>
+		<li id="nav-mens"><a href="javascript:return false;" class="nolink">MENS</a>
+			<ul>
+				<li>
+					<h2><a href="/ca/mens-shoes">Men's Shoe Shop <i class="fa fa-chevron-right"></i></a></h2>
+					<table border="0" cellpadding="0" cellspacing="0">
+						<tr>
+							<td class="menu-category">
+								<h4>Departments</h4>
+
+									<a href="/ca/mens-shoes/athletic+shoes">Athletic Shoes</a>
+
+									<a href="/ca/mens-shoes/sandals">Sandals</a>
+
+									<a href="/ca/mens-shoes/casual+shoes">Casual Shoes</a>
+
+									<a href="/ca/mens-shoes/dress+shoes">Dress Shoes</a>
+
+									<a href="/ca/mens-shoes/casual+boots">Casual Boots</a>
+
+									<a href="/ca/mens-shoes/clogs">Clogs</a>
+
+									<a href="/ca/mens-shoes/moccasins+%26+mukluks">Moccasins & Mukluks</a>
+
+									<a href="/ca/mens-shoes/slippers">Slippers</a>
+
+									<a href="/ca/mens-shoes/rainwear">Rainwear</a>
+
+									<a href="/ca/mens-shoes/winter+boots">Winter Boots</a>
+
+									<a href="/ca/mens-shoes/accessories">Accessories</a>
+
+									<a href="/ca/mens-shoes/shoe+care">Shoe Care</a>
+
+									<a href="/ca/mens-shoes/bags+%26+wallets">Bags & Wallets</a>
+
+							</td>
+							<td class="menu-category">
+								<h4>Popular Styles</h4>
+
+									<a href="/ca/systemshow-searchr_f1MEN_zs1SNK">Sneakers</a>
+
+									<a href="/ca/systemshow-searchr_f1MEN_zs1COX">Casual Oxfords</a>
+
+									<a href="/ca/systemshow-searchr_f1MEN_zs1BAT">Boat Shoes</a>
+
+									<a href="/ca/systemshow-searchr_f1MEN_zs1ANK">Ankle Boots</a>
+
+									<a href="/ca/systemshow-searchr_f1MEN_zs1CHK">Chukka Boots</a>
+
+									<a href="/ca/systemshow-searchr_f1MEN_zs1FBS">Footbed Sandals</a>
+
+									<a href="/ca/systemshow-searchr_f1MEN_zs1CAL">Casual Loafers</a>
+
+									<a href="/ca/systemshow-searchr_f1MEN_zs1CHS">Chelsea Boots</a>
+
+									<a href="/ca/systemshow-searchr_f1MEN_zs1MOC">Moccasins</a>
+
+									<a href="/ca/systemshow-searchr_f1MEN_zs1DOX">Dress Oxfords</a>
+
+									<a href="/ca/systemshow-searchr_f1MEN_zs1HIK">Hiking</a>
+
+									<a href="/ca/systemshow-searchr_f1MEN_zs1SPS">Sport Sandals</a>
+
+									<a href="/ca/systemshow-searchr_f1MEN_zs1WAK">Walking Shoes</a>
+
+							</td>
+							<td class="menu-category">
+								<h4>Collections</h4>
+								<a href="/ca/systemshow-searchr_o52"  class="newarrivals" >New Arrivals!</a><a href="/ca/systemshow-searchr_o354"  >Canvas Sneakers</a><a href="/ca/systemshow-searchr_o250"  >Keep It Casual</a><a href="/ca/systemshow-searchr_o253"  >Get The Loafer Look</a><a href="/ca/systemshow-searchr_o252"  >Sandal Season</a><a href="/ca/systemshow-searchr_o254"  >Let It Rain</a>
+							</td>
+							<td>
+								<h4>Shop By Size</h4>
+
+								<table border="0" cellpadding="2" cellspacing="0" class="shop-by-size">
+
+											<tr>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1MEN_zm14';" type="button" value="4">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1MEN_zm14.5';" type="button" value="4.5">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1MEN_zm15';" type="button" value="5">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1MEN_zm15.5';" type="button" value="5.5">
+										</td>
+
+											</tr>
+
+											<tr>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1MEN_zm16';" type="button" value="6">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1MEN_zm16.5';" type="button" value="6.5">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1MEN_zm17';" type="button" value="7">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1MEN_zm17.5';" type="button" value="7.5">
+										</td>
+
+											</tr>
+
+											<tr>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1MEN_zm18';" type="button" value="8">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1MEN_zm18.5';" type="button" value="8.5">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1MEN_zm19';" type="button" value="9">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1MEN_zm19.5';" type="button" value="9.5">
+										</td>
+
+											</tr>
+
+											<tr>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1MEN_zm110';" type="button" value="10">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1MEN_zm110.5';" type="button" value="10.5">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1MEN_zm111';" type="button" value="11">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1MEN_zm111.5';" type="button" value="11.5">
+										</td>
+
+											</tr>
+
+											<tr>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1MEN_zm112';" type="button" value="12">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1MEN_zm113';" type="button" value="13">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1MEN_zm114';" type="button" value="14">
+										</td>
+
+										<td>
+											<input onclick="javascript:location.href='/ca/systemshow-searchr_f1MEN_zm115';" type="button" value="15">
+										</td>
+
+											</tr>
+
+								</table>
+								<h4>Shop By Colour</h4>
+
+								<table border="0" cellpadding="2" cellspacing="0" class="shop-by-color">
+
+											<tr>
+
+										<td background="http://www.softmoc.com/img/wcolor_Beige.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1MEN_zc1Beige';" title="Beige">
+											<span class="hint--top" data-hint="Beige">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Black.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1MEN_zc1Black';" title="Black">
+											<span class="hint--top" data-hint="Black">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Blue.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1MEN_zc1Blue';" title="Blue">
+											<span class="hint--top" data-hint="Blue">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Brown.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1MEN_zc1Brown';" title="Brown">
+											<span class="hint--top" data-hint="Brown">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Green.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1MEN_zc1Green';" title="Green">
+											<span class="hint--top" data-hint="Green">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Grey.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1MEN_zc1Grey';" title="Grey">
+											<span class="hint--top" data-hint="Grey">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+											</tr>
+
+											<tr>
+
+										<td background="http://www.softmoc.com/img/wcolor_Metallic.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1MEN_zc1Metallic';" title="Metallic">
+											<span class="hint--top" data-hint="Metallic">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Multi.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1MEN_zc1Multi';" title="Multi">
+											<span class="hint--top" data-hint="Multi">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Orange.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1MEN_zc1Orange';" title="Orange">
+											<span class="hint--top" data-hint="Orange">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Pink.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1MEN_zc1Pink';" title="Pink">
+											<span class="hint--top" data-hint="Pink">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Purple.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1MEN_zc1Purple';" title="Purple">
+											<span class="hint--top" data-hint="Purple">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Red.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1MEN_zc1Red';" title="Red">
+											<span class="hint--top" data-hint="Red">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+											</tr>
+
+											<tr>
+
+										<td background="http://www.softmoc.com/img/wcolor_Silver.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1MEN_zc1Silver';" title="Silver">
+											<span class="hint--top" data-hint="Silver">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Tan.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1MEN_zc1Tan';" title="Tan">
+											<span class="hint--top" data-hint="Tan">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_Taupe.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1MEN_zc1Taupe';" title="Taupe">
+											<span class="hint--top" data-hint="Taupe">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										<td background="http://www.softmoc.com/img/wcolor_White.jpg" class="ChooseColor_TD" onclick="location.href='/ca/systemshow-searchr_f1MEN_zc1White';" title="White">
+											<span class="hint--top" data-hint="White">
+												<img src="http://www.softmoc.com/img/none.gif" border="0">
+											</span>
+										</td>
+
+										</tr>
+
+								</table>
+							</td>
+						</tr>
+					</table>
+				</li>
+			</ul>
+		</li>
+		<li id="nav-kids"> <a href="javascript:return false;" class="nolink">KIDS</a>
+			<ul>
+				<li>
+					<table border="0" cellpadding="0" cellspacing="0">
+						<tr>
+							<td class="menu-category">
+								<h2><a href="/ca/girls-shoes">Girls Shoe Shop <i class="fa fa-chevron-right"></i></a></h2>
+								<h4>Departments</h4>
+
+									<a href="/ca/girls-shoes/athletic+shoes">Athletic Shoes</a>
+
+									<a href="/ca/girls-shoes/sandals">Sandals</a>
+
+									<a href="/ca/girls-shoes/casual+shoes">Casual Shoes</a>
+
+									<a href="/ca/girls-shoes/dress+shoes">Dress Shoes</a>
+
+									<a href="/ca/girls-shoes/casual+boots">Casual Boots</a>
+
+									<a href="/ca/girls-shoes/clogs">Clogs</a>
+
+									<a href="/ca/girls-shoes/moccasins+%26+mukluks">Moccasins & Mukluks</a>
+
+									<a href="/ca/girls-shoes/slippers">Slippers</a>
+
+									<a href="/ca/girls-shoes/rainwear">Rainwear</a>
+
+									<a href="/ca/girls-shoes/winter+boots">Winter Boots</a>
+
+									<a href="/ca/girls-shoes/accessories">Accessories</a>
+
+								<h4>Collections</h4>
+								<a href="/ca/systemshow-searchr_o54"  class="newarrivals" >New Arrivals!</a><a href="/ca/systemshow-searchr_o342"  >Puddle Proof</a><a href="/ca/systemshow-searchr_o343"  >On the Move</a><a href="/ca/systemshow-searchr_o225"  >Sassy Sandals</a><a href="/ca/systemshow-searchr_o222"  >Mini Moccasins</a>
+							</td>
+							<td class="menu-category">
+								<h2><a href="/ca/boys-shoes">Boys Shoe Shop <i class="fa fa-chevron-right"></i></a></h2>
+								<h4>Departments</h4>
+
+									<a href="/ca/boys-shoes/athletic+shoes">Athletic Shoes</a>
+
+									<a href="/ca/boys-shoes/sandals">Sandals</a>
+
+									<a href="/ca/boys-shoes/casual+shoes">Casual Shoes</a>
+
+									<a href="/ca/boys-shoes/dress+shoes">Dress Shoes</a>
+
+									<a href="/ca/boys-shoes/casual+boots">Casual Boots</a>
+
+									<a href="/ca/boys-shoes/clogs">Clogs</a>
+
+									<a href="/ca/boys-shoes/rainwear">Rainwear</a>
+
+									<a href="/ca/boys-shoes/winter+boots">Winter Boots</a>
+
+									<a href="/ca/boys-shoes/accessories">Accessories</a>
+
+								<h4>Collections</h4>
+								<a href="/ca/systemshow-searchr_o53"  class="newarrivals" >New Arrivals!</a><a href="/ca/systemshow-searchr_o338"  >Splash Approved</a><a href="/ca/systemshow-searchr_o339"  >Make Moves</a><a href="/ca/systemshow-searchr_o336"  >Cartoon Faves</a><a href="/ca/systemshow-searchr_o312"  >Sandal Time!</a>
+							</td>
+							<td class="menu-category">
+								<h2><a href="/ca/baby-shoes">Baby Shoe Shop <i class="fa fa-chevron-right"></i></a></h2>
+								<h4>Departments</h4>
+
+									<a href="/ca/baby-shoes/athletic+shoes">Athletic Shoes</a>
+
+									<a href="/ca/baby-shoes/sandals">Sandals</a>
+
+									<a href="/ca/baby-shoes/casual+shoes">Casual Shoes</a>
+
+									<a href="/ca/baby-shoes/dress+shoes">Dress Shoes</a>
+
+									<a href="/ca/baby-shoes/casual+boots">Casual Boots</a>
+
+									<a href="/ca/baby-shoes/slippers">Slippers</a>
+
+									<a href="/ca/baby-shoes/rainwear">Rainwear</a>
+
+									<a href="/ca/baby-shoes/winter+boots">Winter Boots</a>
+
+									<a href="/ca/baby-shoes/accessories">Accessories</a>
+
+								<h4>Collections</h4>
+								<a href="/ca/systemshow-searchr_o55"  class="newarrivals" >New Arrivals!</a><a href="/ca/systemshow-searchr_o231"  >Bootie Time</a><a href="/ca/systemshow-searchr_o335"  >First Steps</a><a href="/ca/systemshow-searchr_o334"  >Casual Cuties</a><a href="/ca/systemshow-searchr_o307"  >Itty Bitty Sandals</a>
+							</td>
+						</tr>
+					</table>
+				</li>
+			</ul>
+		</li>
+		<li id="nav-brands"><a href="javascript:return false;" class="nolink">BRANDS</a>
+			<ul>
+				<li>
+					<table border="0" cellpadding="0" cellspacing="0" class="shop-by-brand">
+						<tr>
+							<td>
+								<h4>Featured Brands:</h4>
+								<ul>
+
+									<li><a href="/ca/birkenstock"><img border="0" src="/Vendors/images/SERU_SSS.jpg"></a></li>
+									<li><a href="/ca/skechers"><img border="0" src="/Vendors/images/SKEC_SSS.jpg"></a></li>
+									<li><a href="/ca/converse"><img border="0" src="/Vendors/images/CONV_SSS.jpg"></a></li>
+									<li><a href="/ca/blundstone"><img border="0" src="/Vendors/images/BLUN_SSS.jpg"></a></li>
+									<li><a href="/ca/softmoc"><img border="0" src="/Vendors/images/GRE3_SSS.jpg"></a></li>
+									<li><a href="/ca/hunter"><img border="0" src="/Vendors/images/HUNT_SSS.jpg"></a></li>
+									<li><a href="/ca/clarks"><img border="0" src="/Vendors/images/CLAR_Banner_6800591018672.jpg"></a></li>
+									<li><a href="/ca/bogs"><img border="0" src="/Vendors/images/BOGS_SSS.jpg"></a></li>
+									<li><a href="/ca/ugg+australia"><img border="0" src="/Vendors/images/UGG_SSS.jpg"></a></li>
+									<li><a href="/ca/timberland"><img border="0" src="/Vendors/images/TIMB_SSS.jpg"></a></li>
+									<li><a href="/ca/sperry"><img border="0" src="/Vendors/images/SPER_SSS.JPG"></a></li>
+									<li><a href="/ca/new+balance"><img border="0" src="/Vendors/images/NEWB_SSS.jpg"></a></li>
+									<li><a href="/ca/dr+martens"><img border="0" src="/Vendors/images/STAG_SSS.jpg"></a></li>
+									<li><a href="/ca/keds"><img border="0" src="/Vendors/images/STRI_SSS.gif"></a></li>
+									<li><a href="/ca/josef+seibel"><img border="0" src="/Vendors/images/SEIB_SSS.jpg"></a></li>
+									<li><a href="/ca/merrell"><img border="0" src="/Vendors/images/MERR_SSS.jpg"></a></li>
+									<li><a href="/ca/columbia"><img border="0" src="/Vendors/images/COLU_SSS.jpg"></a></li>
+									<li><a href="/ca/kamik"><img border="0" src="/Vendors/images/KAMI_SSS.jpg"></a></li>
+									<li><a href="/ca/hush+puppies"><img border="0" src="/Vendors/images/HUSH_SSS.jpg"></a></li>
+									<li><a href="/ca/polo"><img border="0" src="/Vendors/images/POLO_SSS.jpg"></a></li>
+
+								</ul>
+							</td>
+						</tr>
+					</table>
+					<h2><a href="/ca/brands">View Over 80 Popular Brands! <i class="fa fa-chevron-right"></i></a></h2>
+				</li>
+			</ul>
+		</li>
+		<li id="nav-clearance"><a href="javascript:return false;" class="nolink">CLEARANCE</a>
+			<ul>
+				<li><a href="/ca/womens-shoes/clearance">Women's Clearance</a></li>
+				<li><a href="/ca/mens-shoes/clearance">Men's Clearance</a></li>
+				<li><a href="/ca/girls-shoes/clearance">Girls Clearance</a></li>
+				<li><a href="/ca/boys-shoes/clearance">Boys Clearance</a></li>
+				<li><a href="/ca/baby-shoes/clearance">Baby Clearance</a></li>
+			</ul>
+		</li>
+		<li id="nav-handbag"><a href="javascript:return false;" class="nolink">HANDBAGS</a>
+			<ul>
+				<li>
+					<table border="0" cellpadding="0" cellspacing="0">
+						<tr>
+							<td class="menu-category">
+								<h2><a href="/ca/handbags">Designer Handbags <i class="fa fa-chevron-right"></i></a></h2>
+								<h4>Featured Styles</h4>
+
+								<a href="/ca/systemshow-searchr_new_d186">New Arrivals!</a>
+
+									<a href="/ca/systemshow-searchr_d186_zs1CRS">Cross Body Bags</a>
+
+									<a href="/ca/systemshow-searchr_d186_zs1WAL">Wallets</a>
+
+									<a href="/ca/systemshow-searchr_d186_zs1TOT">Tote Bags</a>
+
+									<a href="/ca/systemshow-searchr_d186_zs1SAT">Satchels</a>
+
+									<a href="/ca/systemshow-searchr_d186_zs1HOB">Hobo Bags</a>
+
+									<a href="/ca/systemshow-searchr_d186_zs1BAK">Backpacks</a>
+
+									<a href="/ca/systemshow-searchr_d186_zs1WRS">Wristlets</a>
+
+									<a href="/ca/systemshow-searchr_d186_zs1CLU">Clutches</a>
+
+									<a href="/ca/systemshow-searchr_d186_zs1TRV">Travel Bags</a>
+
+									<a href="/ca/systemshow-searchr_d186_zs1COO">Cooler Bags</a>
+
+									<a href="/ca/systemshow-searchr_d186_zs1SHD">Shoulder Bags</a>
+
+									<a href="/ca/systemshow-searchr_d186_zs1CNP">Coin Purses</a>
+
+									<a href="/ca/systemshow-searchr_d186_zs1ORG">Organizer Handbags</a>
+
+									<a href="/ca/systemshow-searchr_d186_zs1SCH">Satchel Handbags</a>
+
+							</td>
+						</tr>
+					</table>
+				</li>
+			</ul>
+		</li>
+		<script LANGUAGE="JavaScript">
+		function ShowHideQuickMyAccountArea()
+		{
+			var Obj=document.getElementById('QuickMyAccountArea');
+			if (Obj.style.display=='none')
+			{
+				document.getElementById('QuickMyAccountBackgroundArea').style.backgroundImage='url(http://www.softmoc.com/img/member_icon_NotLoginYet_up.gif)';
+				Obj.style.display='block';
+			}
+			else
+			{
+				document.getElementById('QuickMyAccountBackgroundArea').style.backgroundImage='url(http://www.softmoc.com/img/member_icon_NotLoginYet.gif)';
+				Obj.style.display='none';
+			}
+		}
+		function CheckEnterKey(Func,e)
+		{
+			 var key;
+			 if(window.event)
+				  key = window.event.keyCode; //IE
+			 else
+				  key = e.which; //firefox
+
+			if (key==13)//enter
+			{
+				if (Func!="")
+					setTimeout(Func,100);
+				return false;
+			}
+			return true;
+		}
+		function myacct_LoginNow()
+		{
+			this.document.myacct_signin_form.submit();
+		}
+		function myacct_signin_SendNow()
+		{
+			this.document.myacct_signin_F2.FM.value = this.document.myacct_signin_form.L_MemberLoginName.value;
+			this.document.myacct_signin_F2.submit();
+		}
+		</script>
+		<script type="text/javascript">
+				  $(document).ready(function () {
+					$('.fa-check').hide();
+					$("#showPasswordDropdown").click(function () {
+					  if ($(".memberPass2").attr("type") == "password") {
+						$('.fa-check').show();
+						$('.fa-square-o').hide();
+						$(".memberPass2").attr("type", "text");
+					  } else {
+						$('.fa-square-o').show();
+						 $('.fa-check').hide();-
+						$(".memberPass2").attr("type", "password");
+					  }
+					});
+				  });
+		</script>
+
+			<li id="my-account"><i class="fa fa-user"></i>My Account Rewards <i class="fa fa-chevron-down"></i><i class="fa fa-times"></i></li>
+			<div id="myAccountArea">
+				<form name="myacct_signin_F2" method="post" action="/ca/MemberForgetPwd.asp">
+					<input type="hidden" value="" name="XType">
+					<input type="hidden" value="" name="FM">
+				</form>
+				<form name="myacct_signin_form" id="myacct_signin_form" action="https://www.softmoc.com/ca/MemberLogin.asp" method="POST" autocomplete="off">
+					<input type="hidden" value="1" name="IsFirstTimeLogin">
+					<input type="hidden" value="" name="XType">
+					<h4>Email Address:</h4>
+					<input autocomplete="off" maxlength="80" name="L_MemberLoginName" onkeypress="return CheckEnterKey('this.document.myacct_signin_form.L_MemberLoginPwd.focus()',event);" placeholder="Email Address" value="" type="email">
+					<h4>Password:
+						<label id="showPasswordDropdown">
+							<i class="fa fa-square-o"></i>
+							<i class="fa fa-check"></i>
+							<div class="showPasswordDropdown2">Show</div>
+						</label>
+					</h4>
+					<input autocomplete="off" name="L_MemberLoginPwd" class="memberPass2" onkeypress="return CheckEnterKey('myacct_LoginNow()',event);" type="password" placeholder="Password" value="">
+					<button id="myacct_signin-button" onclick="myacct_LoginNow()"><i class="fa fa-sign-in"></i> LOGIN</button>
+				</form>
+				<a href="javascript:myacct_signin_SendNow();"><i class="fa fa-key"></i> Forgot Password</a>
+				<a href="/ca/register"><i class="fa fa-user-plus"></i> Register. It's Free!</a>
+			</div>
+
+	</ul>
+</div>
+<!-- Top Banner -->
+
+<div id="mobile-event-banner"><a href="/ca/systemshow-searchr_m1492?osc=softmoc+mothers+day+2016">DON'T FORGET MOM - SHOP NOW!</a></div>
+
+
+
+		<!--REAL CONTENT-->
+<div id="content">
+<h1>LOCATIONS</h1><h3>Find a SoftMoc retail store in your area.</h3>
+            <h2 class="locationsAcross hideMobile">NOW MORE THAN<br>
+              110 LOCATIONS<br>
+              ACROSS CANADA!
+            </h2>
+            <h4>Choose a Location:</h4>
+            <form id="SForm1" name="SForm1" action="locations.asp" method="POST" class="deviceWidth">
+              <select name="SearchState" id="SearchState" onChange="ChangeState()" class="locationoption">
+                <option value="">SELECT BY PROVINCE</option>
+
+						<option value="AB"  >Alberta</option>
+
+						<option value="BC"  >British Columbia</option>
+
+						<option value="MB"  >Manitoba</option>
+
+						<option value="NB"  >New Brunswick</option>
+
+						<option value="NL"  >Newfoundland and Labrador</option>
+
+						<option value="NS"  >Nova Scotia</option>
+
+						<option value="ON"  >Ontario</option>
+
+						<option value="PE"  >Prince Edward Island</option>
+
+						<option value="QC"  >Quebec</option>
+
+						<option value="SK"  >Saskatchewan</option>
+
+              </select>
+              <select name="SearchCity" id="SearchCity" onChange="GoLocSearch()" class="locationoption">
+
+	                <option value="">SELECT BY CITY</option>
+
+              </select>
+            </form>
+
+             <div id="MapTab" name="MapTab" class="deviceWidth">
+             <div class="mapTabSpacer"></div>
+             <span class="tabLabelActive">MAP VIEW</span><a href="javascript:ChangeTab('D')" class="tabLabel">DETAIL VIEW</a>
+             <div id="map" name="map"></div>
+             </div>
+
+
+             <div id="LocationResultAreaTab" name="LocationResultAreaTab" class="deviceWidth">
+             <div class="mapTabSpacer"></div>
+             <a href="javascript:ChangeTab('M')" class="tabLabel">MAP VIEW</a><span class="tabLabelActive">DETAIL VIEW</span>
+             <div class="mapSpacer"></div><div id="LocationResultArea" name="LocationResultArea" class="deviceWidth"></div>
+             </div>
+
+<script type="text/javascript">
+
+//Specify the slider's width (in pixels)
+var sliderwidth="890px"
+//Specify the slider's height
+var sliderheight="138px"
+//Specify the slider's slide speed (larger is faster 1-10)
+var slidespeed=1
+//configure background color:
+slidebgcolor="#FFFFFF"
+
+//Specify the slider's images
+var leftrightslide=new Array()
+var finalslide=''
+leftrightslide[0]='<img src="http://www.softmoc.com/img/stores3.jpg" border=0>'
+leftrightslide[1]='<img src="http://www.softmoc.com/img/stores4.jpg" border=0>'
+
+//Specify gap between each image (use HTML):
+var imagegap="<img src='http://www.softmoc.com/img/none.gif' height=1 width=1 border=0>"
+
+//Specify pixels gap between each slideshow rotation (use integer):
+var slideshowgap=1
+
+
+////NO NEED TO EDIT BELOW THIS LINE////////////
+
+var copyspeed=slidespeed
+leftrightslide='<nobr>'+leftrightslide.join(imagegap)+'</nobr>'
+var iedom=document.all||document.getElementById
+if (iedom)
+document.write('<span id="temp" style="visibility:hidden;position:absolute;top:-100px;left:-9000px">'+leftrightslide+'</span>')
+var actualwidth=''
+var cross_slide, ns_slide
+
+function fillup(){
+if (iedom){
+cross_slide=document.getElementById? document.getElementById("test2") : document.all.test2
+cross_slide2=document.getElementById? document.getElementById("test3") : document.all.test3
+cross_slide.innerHTML=cross_slide2.innerHTML=leftrightslide
+actualwidth=document.all? cross_slide.offsetWidth : document.getElementById("temp").offsetWidth
+cross_slide2.style.left=actualwidth+slideshowgap+"px"
+}
+else if (document.layers){
+ns_slide=document.ns_slidemenu.document.ns_slidemenu2
+ns_slide2=document.ns_slidemenu.document.ns_slidemenu3
+ns_slide.document.write(leftrightslide)
+ns_slide.document.close()
+actualwidth=ns_slide.document.width
+ns_slide2.left=actualwidth+slideshowgap
+ns_slide2.document.write(leftrightslide)
+ns_slide2.document.close()
+}
+lefttime=setInterval("slideleft()",30)
+}
+window.onload=fillup
+
+function slideleft(){
+if (iedom){
+if (parseInt(cross_slide.style.left)>(actualwidth*(-1)+8))
+cross_slide.style.left=parseInt(cross_slide.style.left)-copyspeed+"px"
+else
+cross_slide.style.left=parseInt(cross_slide2.style.left)+actualwidth+slideshowgap+"px"
+
+if (parseInt(cross_slide2.style.left)>(actualwidth*(-1)+8))
+cross_slide2.style.left=parseInt(cross_slide2.style.left)-copyspeed+"px"
+else
+cross_slide2.style.left=parseInt(cross_slide.style.left)+actualwidth+slideshowgap+"px"
+
+}
+else if (document.layers){
+if (ns_slide.left>(actualwidth*(-1)+8))
+ns_slide.left-=copyspeed
+else
+ns_slide.left=ns_slide2.left+actualwidth+slideshowgap
+
+if (ns_slide2.left>(actualwidth*(-1)+8))
+ns_slide2.left-=copyspeed
+else
+ns_slide2.left=ns_slide.left+actualwidth+slideshowgap
+}
+}
+
+
+if (iedom||document.layers){
+with (document){
+document.write('<table border="0" cellspacing="0" cellpadding="0" id="storeslider"><td>')
+if (iedom){
+write('<div style="position:relative;width:'+sliderwidth+';height:'+sliderheight+';overflow:hidden">')
+write('<div style="position:absolute;width:'+sliderwidth+';height:'+sliderheight+';background-color:'+slidebgcolor+'" onMouseover="copyspeed=1" onMouseout="copyspeed=slidespeed">')
+write('<div id="test2" style="position:absolute;left:0px;top:0px"></div>')
+write('<div id="test3" style="position:absolute;left:-1000px;top:0px"></div>')
+write('</div></div>')
+}
+else if (document.layers){
+write('<ilayer width='+sliderwidth+' height='+sliderheight+' name="ns_slidemenu" bgColor='+slidebgcolor+'>')
+write('<layer name="ns_slidemenu2" left=0 top=0 onMouseover="copyspeed=1" onMouseout="copyspeed=slidespeed"></layer>')
+write('<layer name="ns_slidemenu3" left=0 top=0 onMouseover="copyspeed=1" onMouseout="copyspeed=slidespeed"></layer>')
+write('</ilayer>')
+}
+document.write('</td></table>')
+}
+}
+</script>
+
+
+      </div>
+		<!--REAL CONTENT-->
+
+
+
+<script LANGUAGE="JavaScript">
+function XJCSForm_Submit(Obj)
+{
+	if ((this.document.XJCSForm.Email.value=="")||(this.document.XJCSForm.Email.value=="Enter Your Email Address"))
+	{
+		JoinText.innerHTML="<span class='signuptext-fr'>We are unable to verify this email. Please check the spelling and try again.</span>";
+		return;
+	}
+//		this.document.XJCSForm.submit();
+	JoinText.innerHTML="Please wait.....";
+	CheckEmailBeforeSubmit();
+}
+var JoinClubSoftmoc_EmailTryBefore="";
+function CheckEmailBeforeSubmit()
+{
+	var Country=GetCountryFromURL();
+	var FormInputArray=new Array();
+	var ASPName="/"+Country+"/Server_JoinClubSoftmoc.asp";
+	var CallBackFunctionName="GoSumbitCallBack";
+	var WantGrayOut=false;
+	var WantPleaseWaitPopUp=false;
+	var PleaseWaitPopUp_Width=0;
+	var PleaseWaitPopUp_Height=0;
+	var PleaseWaitPopUp_HTML="";
+	if ("" + typeof(this.document.XJCSForm.Email) != "undefined")
+	{
+		while (this.document.XJCSForm.Email.value.indexOf("&#",0)>=0)
+			this.document.XJCSForm.Email.value=ReplaceNow(this.document.XJCSForm.Email.value,"&#","");
+	}
+	FormInputArray["Email"]=this.document.XJCSForm.Email.value;
+	if ((JoinClubSoftmoc_EmailTryBefore!="")&&(JoinClubSoftmoc_EmailTryBefore==this.document.XJCSForm.Email.value))
+		FormInputArray["SkipEmailVerify"]="1";
+	JoinClubSoftmoc_EmailTryBefore=this.document.XJCSForm.Email.value;
+
+	ServerCheckingFrame_Exec(ASPName,CallBackFunctionName,FormInputArray,WantGrayOut,WantPleaseWaitPopUp,
+				PleaseWaitPopUp_Width,PleaseWaitPopUp_Height,PleaseWaitPopUp_HTML);
+}
+function GoSumbitCallBack(IFrameObj)
+{
+	if(IFrameObj.Msg !="")
+		JoinText.innerHTML="<span class='signuptext-fr'>" + IFrameObj.Msg+"</span>";
+	else
+		JoinText.innerHTML="<font color='#00AA00#'>Success! We have added your email to Club SoftMoc!</font>";
+//			this.document.XJCSForm.submit();
+}
+function ResetXJCSForm2()
+{
+	this.document.XJCSForm2.Email.value="Enter Your Email";
+	JoinText2.innerHTML="";
+}
+function XJCSForm2_Submit(Obj)
+{
+	if ((this.document.XJCSForm2.Email.value=="")||(this.document.XJCSForm2.Email.value=="Enter Your Email Address"))
+	{
+		JoinText2.innerHTML="We are unable to verify this email. Please check the spelling and try again.";
+		return;
+	}
+	JoinText2.innerHTML="Please wait.....";
+	CheckEmailBeforeSubmit2();
+}
+var JoinClubSoftmoc_EmailTryBefore2="";
+function CheckEmailBeforeSubmit2()
+{
+	var Country=GetCountryFromURL();
+	var FormInputArray=new Array();
+	var ASPName="/"+Country+"/Server_JoinClubSoftmoc.asp";
+	var CallBackFunctionName="GoSumbitCallBack2";
+	var WantGrayOut=false;
+	var WantPleaseWaitPopUp=false;
+	var PleaseWaitPopUp_Width=0;
+	var PleaseWaitPopUp_Height=0;
+	var PleaseWaitPopUp_HTML="";
+	if ("" + typeof(this.document.XJCSForm2.Email) != "undefined")
+	{
+		while (this.document.XJCSForm2.Email.value.indexOf("&#",0)>=0)
+			this.document.XJCSForm2.Email.value=ReplaceNow(this.document.XJCSForm2.Email.value,"&#","");
+	}
+	FormInputArray["Email"]=this.document.XJCSForm2.Email.value;
+	if ((JoinClubSoftmoc_EmailTryBefore2!="")&&(JoinClubSoftmoc_EmailTryBefore2==this.document.XJCSForm2.Email.value))
+		FormInputArray["SkipEmailVerify"]="1";
+	JoinClubSoftmoc_EmailTryBefore2=this.document.XJCSForm2.Email.value;
+
+	ServerCheckingFrame_Exec(ASPName,CallBackFunctionName,FormInputArray,WantGrayOut,WantPleaseWaitPopUp,
+				PleaseWaitPopUp_Width,PleaseWaitPopUp_Height,PleaseWaitPopUp_HTML);
+}
+function GoSumbitCallBack2(IFrameObj)
+{
+	if(IFrameObj.Msg !="")
+		JoinText2.innerHTML=""+IFrameObj.Msg;
+	else
+	{
+		JoinText2.innerHTML="<font color='#00AA00#'>Success! We have added your email to Club SoftMoc!</font>";
+		ga('send', 'event', 'Club SoftMoc', 'Click', 'Email Submitted');
+		setTimeout(function(){ $.magnificPopup.close(); }, 2000);
+	}
+}
+</script>
+<script language="javascript" type="text/javascript">
+<!--
+var win=null;
+function NewWindow(mypage,myname,w,h,scroll,pos){
+if(pos=="random"){LeftPosition=(screen.width)?Math.floor(Math.random()*(screen.width-w)):100;TopPosition=(screen.height)?Math.floor(Math.random()*((screen.height-h)-75)):100;}
+if(pos=="center"){LeftPosition=(screen.width)?(screen.width-w)/2:100;TopPosition=(screen.height)?(screen.height-h)/2:100;}
+else if((pos!="center" && pos!="random") || pos==null){LeftPosition=0;TopPosition=20}
+settings='width='+w+',height='+h+',top='+TopPosition+',left='+LeftPosition+',scrollbars='+scroll+',location=no,directories=no,status=no,menubar=no,toolbar=no,resizable=no';
+win=window.open(mypage,myname,settings);}
+// -->
+</script>
+
+	<span class='signuptext-fr'>
+
+		<div class="hideMobile" id="footer">
+
+			<div id="blog">
+				<a href="http://www.shoesforlife.com" target="new"><img src="http://www.softmoc.com/img/shoes-for-life-blog.jpg" alt="Shoesforlife.com" width="215" height="120"></a>
+			</div>
+
+			<div id="find-a-store">
+				<a href="/ca/locations.asp"><img src="http://www.softmoc.com/img/find-a-store2.png" width="100" height="80" border="0"><h3>Find a Store</h3></a>
+			</div>
+
+
+			<div id="footer-offer">
+				<a href="/ca/systemshow-searchr_m1485?osc=handbags+ftr"><img src="http://www.softmoc.com/img/Homepage-Hanbag-Image_ENG.jpg" width="215" height="120"></a>
+			</div>
+
+			<div id="handbags">
+				<a id="A1" href='https://server.iad.liveperson.net/hc/65474986/?cmd=file&file=visitorWantsToChat&site=65474986&byhref=1&imageUrl=https://server.iad.liveperson.net/hcp/Gallery/ChatButton-Gallery/English/Small/2c' target='chat65474986' onClick="lpButtonCTTUrl = 'https://server.iad.liveperson.net/hc/65474986/?cmd=file&file=visitorWantsToChat&site=65474986&imageUrl=https://server.iad.liveperson.net/hcp/Gallery/ChatButton-Gallery/English/Small/2c&referrer='+escape(document.location); lpButtonCTTUrl = (typeof(lpAppendVisitorCookies) != 'undefined' ? lpAppendVisitorCookies(lpButtonCTTUrl) : lpButtonCTTUrl); lpButtonCTTUrl = ((typeof(lpMTag)!='undefined' && typeof(lpMTag.addFirstPartyCookies)!='undefined')?lpMTag.addFirstPartyCookies(lpButtonCTTUrl):lpButtonCTTUrl);window.open(lpButtonCTTUrl,'chat65474986','width=475,height=400,resizable=yes');return false;">
+					<img src="http://www.softmoc.com/img/live-chat-icon.jpg" alt="Shoesforlife.com" width="215" height="120">
+				</a>
+			</div>
+
+		</div>
+
+	</span>
+	<div id="incentive" class="hideMobile" >
+		<div>
+			<img src="http://www.softmoc.com/img/footer-cart.png" width="30" height="30">
+			<h4>BUY ONLINE</h4>
+		</div>
+
+		<div>
+			<img src="http://www.softmoc.com/img/footer-instore.png" width="30" height="30">
+			<h4>PICK UP IN STORE</h4>
+		</div>
+
+		<div>
+			<img src="http://www.softmoc.com/img/footer-phone.png" width="30" height="30">
+			<h4>ORDER BY PHONE: 1-877-763-8662</h4>
+		</div>
+	</div>
+
+    <div id="jcs-mobile-banner">
+      <div id="jcs-mobile-title">Save 10% On Your First Purchase | Join our Newsletter</div>
+      <a href="#jcs-form" class="jcs-form-open">
+        <div id="jcs-mobile-btn">Join the Club</div>
+      </a>
+    </div>
+
+	</div>
+
+    <div class="jcs-banner hideMobile">
+      <a href="#jcs-form" class="jcs-form-open">
+        Sign Up to Our Newsletter & Save <span>10% Off</span> Your First Purchase Today
+        <div class="jcs-banner-btn">Join the Club</div>
+      </a>
+    </div>
+
+
+<div class="hideMobile deviceWidth" id="sub-footer">
+	<div class="footerlinks" >
+		<ul>
+		  <li><a href="/ca/locations.asp">Locations</a></li>
+		  <li><a href="/ca/customerservice.asp">Customer Service</a></li>
+		  <li><a id="_lpChatBtn2" href='https://server.iad.liveperson.net/hc/65474986/?cmd=file&file=visitorWantsToChat&site=65474986&byhref=1&imageUrl=https://server.iad.liveperson.net/hcp/Gallery/ChatButton-Gallery/English/Small/2c' target='chat65474986' onClick="lpButtonCTTUrl = 'https://server.iad.liveperson.net/hc/65474986/?cmd=file&file=visitorWantsToChat&site=65474986&imageUrl=https://server.iad.liveperson.net/hcp/Gallery/ChatButton-Gallery/English/Small/2c&referrer='+escape(document.location); lpButtonCTTUrl = (typeof(lpAppendVisitorCookies) != 'undefined' ? lpAppendVisitorCookies(lpButtonCTTUrl) : lpButtonCTTUrl); lpButtonCTTUrl = ((typeof(lpMTag)!='undefined' && typeof(lpMTag.addFirstPartyCookies)!='undefined')?lpMTag.addFirstPartyCookies(lpButtonCTTUrl):lpButtonCTTUrl);window.open(lpButtonCTTUrl,'chat65474986','width=475,height=400,resizable=yes');return false;">Live Help</a></li>
+		  <li><a href="/ca/faqs.asp">FAQs</a></li>
+		</ul>
+	</div>
+	<div class="footerlinks" >
+		<ul>
+		  <li><a href="/ca/frequentbuyerrewards.asp"><nobr>About My Account Rewards</nobr></a></li>
+		  <li><a href="/ca/register"><nobr>Register My Account Rewards</nobr></a></li>
+		  <li><a href="/ca/ordertrackingreal.asp">Order Tracking</a></li>
+
+		  <li><a href="/ca/corporatesales">Corporate Sales</a></li>
+
+		</ul>
+	</div>
+	<div class="footerlinks" >
+		<ul>
+		  <li><a href="/ca/shoesize.asp">Shoe Size Guide</a></li>
+		  <li><a href="/ca/shipinfo.asp">Shipping Info</a></li>
+		  <li><a href="/ca/privacystatement.asp">Privacy Statement</a></li>
+
+		</ul>
+	</div>
+	<div class="footerlinks" >
+		<ul>
+			<li><a href="/ca/sitemap.asp">Site Map</a></li>
+
+
+				<li><a href="/ca/giftcardchecking.asp"><nobr>Check Gift Card Balance</nobr></a></li>
+
+			<li><a href="/ca/rate"><nobr>Rate Your Experience</nobr></a></li>
+
+		</ul>
+	</div>
+	<div class="footerlinks" >
+		<ul>
+
+				<li><a href="/ca/giftcards">Gift Cards</a></li>
+				<li><a href="/ca/jobs.asp">Job Opportunities</a></li>
+
+			   <li><a href="http://www.ShoesForLife.com" target="_blank">Visit ShoesForLife.com</a></li>
+
+				<li><a href="/ca/price.asp">Price Protection Policy</a></li>
+
+		</ul>
+	</div>
+</div>
+
+<div id="mobile-footer" class="hide show">
+	<div id="orderPhone">ORDER BY PHONE
+		<br>
+		<a href="callto:+18777638662"><strong>1 877 SOFTMOC &nbsp;-&nbsp; 1 877 763 8662</strong></a>
+	</div>
+	<div id="footerBtns">
+		<a href="/ca/memberarea.asp" id="myAccRewards">My Account Rewards</a>
+		<a href="/ca/locations.asp" id="findStore">Find A Store</a>
+		<a href="/ca/ordertrackingreal.asp" id="orderTrack">Order Tracking</a>
+        <a href="https://server.iad.liveperson.net/hc/65474986/?cmd=file&amp;file=visitorWantsToChat&amp;site=65474986&amp;byhref=1&amp;imageUrl=https://server.iad.liveperson.net/hcp/Gallery/ChatButton-Gallery/English/Small/2c" id="liveChat">Live Chat</a>
+		<a href="/ca/customerservice.asp" id="customerService">Customer Service</a>
+
+			<a href="http://shoesforlife.com/" id="shoeBlog">Vist Our Blog</a>
+
+		<div id="flagComboMobile">
+			<button id="countryFlagBtnMobile">
+
+				<img src="http://www.softmoc.com/img/flag-canada.png" border="0">
+				<span>Canada</span>
+
+				<i class="fa fa-chevron-down"></i>
+			</button>
+			<div id="countryChangeMobile">
+
+				<a href="javascript:ChangeSiteCountry('ca-fr')"><img src="http://www.softmoc.com/img/flag-canada.png" border="0"> CA (Fran&ccedil;ais)</a>
+				<a href="javascript:ChangeSiteCountry('us')"><img src="http://www.softmoc.com/img/flag-unitedstates.png" border="0"> USA</a>
+
+			</div>
+		</div>
+
+
+<!--
+
+			<a href="javascript:ChangeSysLang('F')" id="languageChange">Français</a>
+
+-->
+
+	</div>
+	<div class="clear"></div>
+	<div id="footerSocial">
+		<h4>CONNECT WITH US:</h4>
+		<a href="https://www.facebook.com/softmocshoes" id="facebookm"><img src="http://www.softmoc.com/img/facebook.png" name="facebookm" width="30" height="30" border="0"></a>
+		<a href="https://twitter.com/SoftMocShoes" id="twitterm"><img src="http://www.softmoc.com/img/twitter.png" name="twitterm" width="30" height="30" border="0"></a>
+		<a href="http://www.pinterest.com/softmoc/" id="pinterestm"><img src="http://www.softmoc.com/img/pinterest.png" name="pinterestm" width="30" height="30" border="0"></a>
+		<a href="http://instagram.com/softmocshoes" id="instagramm"><img src="http://www.softmoc.com/img/instagram.png" name="instagramm" width="30" height="30" border="0"></a>
+		<a href="https://www.youtube.com/channel/UCgCSd8u7LKLp8x4YCTy59mQ/videos?shelf_id=0&amp;view=0&amp;sort=dd" id="youtubem"><img src="http://www.softmoc.com/img/youtube.png" name="youtubem" width="30" height="30" border="0"></a>
+
+		<a href="http://shoesforlife.com/" id="wordpressm"><img src="http://www.softmoc.com/img/wordpress.png" name="wordpressm" width="30" height="30" border="0"></a>
+
+	</div>
+</div>
+
+<div class="deviceWidth" id="copyright">
+	Copyright &copy; 1996 - 2016 SoftMoc&trade; Inc.
+	<br class="hide show"> E-Commerce by <a href='http://www.mwfgroupbahamas.com' target='_blank'>MWF&nbsp;Group</a>. All rights reserved.
+</div>
+
+<script data-cfasync="false" type="text/javascript">
+setTimeout(function(){var a=document.createElement("script");
+var b=document.getElementsByTagName("script")[0];
+a.src=document.location.protocol+"//script.crazyegg.com/pages/scripts/0012/1512.js?"+Math.floor(new Date().getTime()/3600000);
+a.async=true;a.type="text/javascript";b.parentNode.insertBefore(a,b)}, 1);
+</script><!-- Google Code for Remarketing Tag -->
+<img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/1072714520/?value=0&amp;guid=ON&amp;script=0"/>
+<!-- Google Tag Manager -->
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-PNMM6H" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script data-cfasync="false">(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-PNMM6H');</script>
+<!-- End Google Tag Manager -->
+  </div></div>
+
+<script LANGUAGE="JavaScript">
+
+setTimeout('ChangeState();',100);
+
+//setTimeout('ChangeState();FillMap();',100);
+
+</script>
+
+
+<script type="text/javascript" data-cfasync="false" src="//static.criteo.net/js/ld/ld.js" async="true"></script>
+<script type="text/javascript" data-cfasync="false">
+var site_type = /iPad/.test(navigator.userAgent) ? "t" : /Mobile|iP(hone|od)|Android|BlackBerry|IEMobile|Silk/.test(navigator.userAgent) ? "m" : "d";
+var criteo_q = window.criteo_q || [];
+criteo_q.push(
+
+			{ event: "setAccount", account: 11642 }
+
+//		,{ event: "setCustomerId", id: "#Customer ID#"}
+		,{ event: "setSiteType", type: site_type}  //m mobile, t tablet, d classic
+
+		,{ event: "viewHome"}
+
+	);
+</script>
+
+</body>
+</html>
